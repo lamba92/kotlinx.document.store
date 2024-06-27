@@ -1,34 +1,71 @@
 package com.github.lamba92.kotlin.db
 
+import java.lang.System.getenv
 import kotlin.io.path.Path
+import kotlin.io.path.deleteExisting
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
 class Test {
 
-    val db = kotlinxDb {
-        filePath = Path("test.db")
+    val dbPath
+        get() = Path(getenv("DB_PATH"))
+
+    val db: KotlinxDb
+        get() = kotlinxDb {
+            filePath = dbPath
+        }
+
+
+    @BeforeEach
+    fun deleteDb() = runTest {
+        dbPath.deleteExisting()
+    }
+
+    @AfterEach
+    fun closeDb() = runTest {
+        db.close()
     }
 
     @Test
-    fun test() = runTest {
-        val collection = db.getCollection<TestUser>("test")
+    fun `Fails if collection type is primitive`() = runTest {
+        val collection = db.getCollection<Long>("test")
+        assertFails { collection.insert(1L) }
+    }
 
-        collection.insert(TestUser("mario", 20, birthDate = 0L))
+    @Test
+    fun `Fails if collection type is array-like`() = runTest {
+        val collection = db.getCollection<List<Pair<Int, Int>>>("test")
+        assertFails { collection.insert(listOf(1 to 1)) }
+    }
+
+    @Test
+    fun insert() = runTest {
+        val collection = db.getCollection<TestUser>("test")
+        val testUser = TestUser(
+            name = "mario",
+            age = 20,
+            birthDate = 0L,
+            addresses = listOf(Address("street", 1))
+        )
+
+        collection.insert(testUser)
 
         assertEquals(
             expected = 1,
             actual = collection.asFlow().count(),
             message = "Collection should have 1 element"
         )
-
-        val adultMarios = collection.find("name", "mario")
-            .filter { it.isAdult == true }
 
     }
 }
@@ -39,7 +76,8 @@ data class TestUser(
     val age: Int,
     val isAdult: Boolean? = null,
     val birthDate: Long,
-    val addresses: List<Address>? = null
+    val addresses: List<Address>? = null,
+    @SerialName("_id") val id: Long? = null
 )
 
 @Serializable

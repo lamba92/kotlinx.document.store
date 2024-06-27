@@ -3,7 +3,6 @@ package com.github.lamba92.kotlin.db
 import com.github.lamba92.kotlin.db.KotlinxDb.Companion.ID_PROPERTY_NAME
 import java.nio.file.Path
 import kotlin.annotation.AnnotationTarget.*
-import kotlin.reflect.typeOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -50,12 +48,15 @@ class KotlinxDbBuilder {
             .autoCommitBufferSize(Integer.MAX_VALUE)
             .cacheSize(cacheSize.megabytes.toInt())
             .open()
-        return KotlinxDb(store, bufferSize, Json(json) { ignoreUnknownKeys = true })
+        return KotlinxDb(
+            store = store,
+            bufferSize = bufferSize,
+            json = Json(json) { ignoreUnknownKeys = true }
+        )
     }
 }
 
 fun kotlinxDb(block: KotlinxDbBuilder.() -> Unit) = KotlinxDbBuilder().apply(block).build()
-
 
 class KotlinxDb internal constructor(
     @InternalDbApi val store: MVStore,
@@ -71,6 +72,10 @@ class KotlinxDb internal constructor(
 
     @InternalDbApi
     var bufferSizeCounter = 0
+
+    suspend fun commit() = withContext(Dispatchers.IO) {
+        store.commit()
+    }
 
     suspend fun close() = withContext(Dispatchers.IO) {
         store.close()
@@ -116,9 +121,9 @@ class DatabaseCollection<T : Any>(
 ) {
 
     private val mutex = Mutex()
-    private val map: MVMap<ULong, String> by lazy { store.openMap(name) }
+    private val map: MVMap<Long, String> by lazy { store.openMap(name) }
     private val indexesMap: MVMap<String, Boolean> by lazy { store.openMap("$name.indexes") }
-    private val genIdMap: MVMap<String, ULong> by lazy { store.openMap(KotlinxDb.ID_GEN_MAP_NAME) }
+    private val genIdMap: MVMap<String, Long> by lazy { store.openMap(KotlinxDb.ID_GEN_MAP_NAME) }
 
 
     // field example: "address.street"
@@ -127,12 +132,12 @@ class DatabaseCollection<T : Any>(
     suspend fun createIndex(selector: String, unique: Boolean) = mutex.withLock {
         val index = withContext(Dispatchers.IO) {
             indexesMap[selector] = unique
-            store.openMap<String?, Set<ULong>>("$name.$selector")
+            store.openMap<String?, Set<Long>>("$name.$selector")
         }
         val filedSegments = selector.split(".")
         asJsonElementFlow()
             .mapNotNull {
-                val id = it.getValue(ID_PROPERTY_NAME).jsonPrimitive.long.toULong()
+                val id = it.getValue(ID_PROPERTY_NAME).jsonPrimitive.long
                 when (val value = it.getValueFromSegments(filedSegments)) {
                     is JsonObjectSelectionResult.Found -> value.value to id
                     JsonObjectSelectionResult.NotFound -> return@mapNotNull null
@@ -166,7 +171,7 @@ class DatabaseCollection<T : Any>(
 
     private suspend fun findUsingIndex(field: String, value: String): Flow<T> {
         val index = withContext(Dispatchers.IO) {
-            store.openMap<String?, Set<ULong>>("$name.$field")
+            store.openMap<String?, Set<Long>>("$name.$field")
         }
         return index[value]
             ?.asFlow()
@@ -190,11 +195,10 @@ class DatabaseCollection<T : Any>(
         val id = jsonObject[ID_PROPERTY_NAME]
             ?.jsonPrimitive
             ?.long
-            ?.toULong()
             ?: withContext(Dispatchers.IO) {
                 mutex.withLock {
-                    val newId = genIdMap.getOrDefault(name, 0u) + 1u
-                    genIdMap[name] = newId + 1u
+                    val newId = genIdMap.getOrDefault(name, Long.MIN_VALUE)
+                    genIdMap[name] = newId + 1
                     newId
                 }
             }
@@ -215,7 +219,7 @@ class DatabaseCollection<T : Any>(
                             JsonObjectSelectionResult.Null -> null
                         }
 
-                        val index: MVMap<String, Set<ULong>> = store.openMap("$name.$fieldSelector")
+                        val index: MVMap<String, Set<Long>> = store.openMap("$name.$fieldSelector")
                         val ids = index[fieldValue]?.plus(id) ?: setOf(id)
                         index[fieldValue] = ids
                     }
@@ -225,14 +229,14 @@ class DatabaseCollection<T : Any>(
         services.commitIfNecessary()
     }
 
-    suspend fun findById(id: ULong): T? {
+    suspend fun findById(id: Long): T? {
         return json.decodeFromString(
             deserializer = serializer,
             string = withContext(Dispatchers.IO) { map[id] } ?: return null
         )
     }
 
-    private fun asJsonElementFlow() = map
+    fun asJsonElementFlow() = map
         .asSequence()
         .asFlow()
         .flowOn(Dispatchers.IO)
@@ -243,7 +247,7 @@ class DatabaseCollection<T : Any>(
 
 }
 
-private fun JsonObject.copy(id: ULong) =
+private fun JsonObject.copy(id: Long) =
     JsonObject(toMutableMap().also { it[ID_PROPERTY_NAME] = JsonPrimitive(id.toLong()) })
 
 fun interface DatabaseServices {

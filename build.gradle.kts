@@ -30,6 +30,9 @@ repositories {
     mavenCentral()
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    test {
+        useJUnitPlatform()
+        environment("DB_PATH", layout.buildDirectory.file("test.db").get().asFile.absolutePath)
+    }
 }
