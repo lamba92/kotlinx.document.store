@@ -2,14 +2,11 @@ package com.github.lamba92.kotlin.db
 
 import java.lang.System.getenv
 import kotlin.io.path.Path
-import kotlin.io.path.deleteExisting
+import kotlin.io.path.deleteIfExists
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -21,15 +18,14 @@ class Test {
     val dbPath
         get() = Path(getenv("DB_PATH"))
 
-    val db: KotlinxDb
-        get() = kotlinxDb {
-            filePath = dbPath
-        }
+    val db: KotlinxDb = kotlinxDb {
+        filePath = dbPath
+    }
 
 
     @BeforeEach
     fun deleteDb() = runTest {
-        dbPath.deleteExisting()
+        dbPath.deleteIfExists()
     }
 
     @AfterEach
@@ -63,7 +59,7 @@ class Test {
 
         assertEquals(
             expected = 1,
-            actual = collection.asFlow().count(),
+            actual = collection.iterateAll().count(),
             message = "Collection should have 1 element"
         )
 

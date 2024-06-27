@@ -56,7 +56,7 @@ import kotlinx.serialization.json.JsonPrimitive
  * json.getValueFromSegments("phones.$1".split(".")) // Returns Found("456")
  * ```
  *
- * @param [filedSegments] The list of strings defining the path to the desired value.
+ * @param [query] The list of strings defining the path to the desired value.
  * @return A [JsonObjectSelectionResult] representing the result of following the segments path:
  * - [JsonObjectSelectionResult].[Found](content: String) if the last valid key or index points to a primitive Json value.
  * The content of the found value is included in the `Found` result.
@@ -64,9 +64,9 @@ import kotlinx.serialization.json.JsonPrimitive
  * - [JsonObjectSelectionResult].[Null] if the last valid key or index points to a JsonNull.
  *
  */
-fun JsonObject.getValueFromSegments(filedSegments: List<String>): JsonObjectSelectionResult {
+fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
 
-    val queue = filedSegments.toMutableList()
+    val queue = query.toMutableList()
     var currentElement: JsonElement = this
 
     while (queue.isNotEmpty()) {
@@ -91,6 +91,9 @@ fun JsonObject.getValueFromSegments(filedSegments: List<String>): JsonObjectSele
     }
 }
 
+fun JsonObject.select(query: String): JsonObjectSelectionResult =
+    select(query.split("."))
+
 /**
  * `JsonObjectSelectionResult` is a sealed interface that represents the possible outcomes
  * when attempting to retrieve a value from a `JsonObject` using the `getValueFromSegments` function.
@@ -105,7 +108,7 @@ fun JsonObject.getValueFromSegments(filedSegments: List<String>): JsonObjectSele
  *
  * - `Null`: represents a situation where the last valid key or index points to a `JsonNull`.
  *
- * @see [getValueFromSegments]
+ * @see [select]
  */
 sealed interface JsonObjectSelectionResult {
     /**
