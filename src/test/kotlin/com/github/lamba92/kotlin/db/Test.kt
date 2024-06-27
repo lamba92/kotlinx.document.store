@@ -19,7 +19,7 @@ class Test {
     fun test() = runTest {
         val collection = db.getCollection<TestUser>("test")
 
-        collection.insertOne(TestUser("mario", 20))
+        collection.insert(TestUser("mario", 20, birthDate = 0L))
 
         assertEquals(
             expected = 1,
@@ -27,9 +27,9 @@ class Test {
             message = "Collection should have 1 element"
         )
 
-        val mario = collection.asFlow()
-            .filter { it.name == "mario" }
-            .first()
+        val adultMarios = collection.find("name", "mario")
+            .filter { it.isAdult == true }
+
     }
 }
 
@@ -37,7 +37,9 @@ class Test {
 data class TestUser(
     val name: String,
     val age: Int,
-//    val address: Address? = null
+    val isAdult: Boolean? = null,
+    val birthDate: Long,
+    val addresses: List<Address>? = null
 )
 
 @Serializable
