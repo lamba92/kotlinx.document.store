@@ -19,6 +19,7 @@ class KotlinxDb internal constructor(
     companion object {
         const val ID_GEN_MAP_NAME = "id_gen"
         const val ID_PROPERTY_NAME = "_id"
+        const val INDEXES_MAP_NAME = "indexes"
     }
 
     private val mutexMap = ConcurrentHashMap<String, Mutex>()
@@ -37,6 +38,9 @@ class KotlinxDb internal constructor(
             json = json,
             mutex = mutexMap.getOrPut(name) { Mutex() },
             store = store,
+            indexesMap = store.openMap(INDEXES_MAP_NAME),
+            genIdMap = store.openMap(ID_GEN_MAP_NAME),
+            collection = store.openMap(name)
         )
 
 }
