@@ -12,7 +12,6 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
     setupKotlin()
 }
 
-
 tasks {
     withType<Test> {
         environment("DB_PATH", layout.buildDirectory.file("test.db").get().asFile.absolutePath)

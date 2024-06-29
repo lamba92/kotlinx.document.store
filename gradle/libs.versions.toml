@@ -7,6 +7,7 @@ kotlinx-coroutines-test = "1.8.1"
 kotlinx-datetime = "0.6.0"
 junit = "5.10.2"
 rocksdb = "8.0.0"
+kotlin-browser = "1.0.0-pre.764"
 
 [libraries]
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
@@ -19,6 +20,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 rocksdb-multiplatform = { module="io.maryk.rocksdb:rocksdb-multiplatform", version.ref="rocksdb" }
+kotlin-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-browser" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

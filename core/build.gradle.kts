@@ -1,12 +1,15 @@
 plugins {
+    convention
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    convention
 }
 
 kotlin {
 
     jvm()
+    js {
+        browser()
+    }
 
     sourceSets {
 
@@ -14,13 +17,6 @@ kotlin {
             dependencies {
                 api(libs.kotlinx.serialization.json)
                 api(libs.kotlinx.coroutines.core)
-            }
-        }
-
-        commonTest {
-            dependencies {
-                api(libs.kotlinx.coroutines.test)
-                api(kotlin("test"))
             }
         }
 
