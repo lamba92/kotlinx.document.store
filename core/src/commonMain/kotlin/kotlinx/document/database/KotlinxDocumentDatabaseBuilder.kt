@@ -8,7 +8,7 @@ class KotlinxDocumentDatabaseBuilder {
         ignoreUnknownKeys = true
     }
 
-    var store: kotlinx.document.database.DataStore? = null
+    var store: DataStore? = null
 
     fun build(): KotlinxDocumentDatabase = KotlinxDocumentDatabase(
         store = store ?: error("Store must be provided"),
@@ -22,4 +22,4 @@ class KotlinxDocumentDatabaseBuilder {
 inline fun KotlinxDocumentDatabase(block: KotlinxDocumentDatabaseBuilder.() -> Unit) =
     KotlinxDocumentDatabaseBuilder().apply(block).build()
 
-fun KotlinxDocumentDatabase(store: kotlinx.document.database.DataStore) = KotlinxDocumentDatabase { this.store = store}
+fun KotlinxDocumentDatabase(store: DataStore) = KotlinxDocumentDatabase { this.store = store}

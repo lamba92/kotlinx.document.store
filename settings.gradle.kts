@@ -13,6 +13,7 @@ dependencyResolutionManagement {
 
 include(
     ":core",
+    ":tests",
     ":stores:mvstore",
     ":stores:rocksdb",
     ":stores:browser",

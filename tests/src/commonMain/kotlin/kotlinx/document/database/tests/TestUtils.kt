@@ -1,13 +1,9 @@
-package kotlinx.document.database
+package kotlinx.document.database.tests
 
-import kotlin.io.path.Path
 import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
-
-val dbPath
-    get() = Path(System.getenv("DB_PATH"))
 
 @Serializable
 data class TestUser(
@@ -19,7 +15,6 @@ data class TestUser(
 ) {
     companion object {
         val Mario = TestUser("mario", 20)
-
         val Luigi = TestUser("luigi", 20)
     }
 }

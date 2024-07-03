@@ -1,10 +1,10 @@
 package kotlinx.document.database.maps
 
-import com.github.lamba92.kotlin.db.PersistentMap
-import com.github.lamba92.kotlin.db.SimpleEntry
-import com.github.lamba92.kotlin.db.UpdateResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.document.database.PersistentMap
+import kotlinx.document.database.SimpleEntry
+import kotlinx.document.database.UpdateResult
 
 fun PersistentMap<String, String>.asIdGenerator() = IdGenerator(this)
 

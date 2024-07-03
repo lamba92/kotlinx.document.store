@@ -2,7 +2,7 @@ package kotlinx.document.database
 
 import kotlinx.serialization.json.Json
 
-interface KotlinxDbCollection {
+interface KotlinxDatabaseCollection {
     suspend fun size(): Long
     val name: String
     val json: Json

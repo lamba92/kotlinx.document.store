@@ -1,10 +1,10 @@
 package kotlinx.document.database.maps
 
-import com.github.lamba92.kotlin.db.PersistentMap
-import com.github.lamba92.kotlin.db.SimpleEntry
-import com.github.lamba92.kotlin.db.UpdateResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.document.database.PersistentMap
+import kotlinx.document.database.SimpleEntry
+import kotlinx.document.database.UpdateResult
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -33,7 +33,6 @@ class IndexOfIndexes(private val delegate: PersistentMap<String, String>) : Pers
 
     override suspend fun containsKey(key: String): Boolean =
         delegate.containsKey(key)
-
 
     override suspend fun get(key: String): List<String>? =
         delegate.get(key)?.split()

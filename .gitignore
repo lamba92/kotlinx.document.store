@@ -6,6 +6,8 @@ build/
 
 ### IntelliJ IDEA ###
 .idea/
+.kotlin/
+yarn.lock
 
 ### Eclipse ###
 .apt_generated

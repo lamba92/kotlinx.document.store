@@ -1,9 +1,5 @@
 package kotlinx.document.database
 
-import com.github.lamba92.kotlin.db.maps.CollectionMap
-import com.github.lamba92.kotlin.db.maps.IdGenerator
-import com.github.lamba92.kotlin.db.maps.IndexOfIndexes
-import com.github.lamba92.kotlin.db.maps.asIndex
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.chunked
@@ -13,6 +9,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.document.database.maps.CollectionMap
+import kotlinx.document.database.maps.IdGenerator
+import kotlinx.document.database.maps.IndexOfIndexes
+import kotlinx.document.database.maps.asIndex
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -24,11 +24,11 @@ class JsonCollection(
     override val name: String,
     override val json: Json,
     private val mutex: Mutex,
-    private val store: kotlinx.document.database.DataStore,
+    private val store: DataStore,
     private val indexMap: IndexOfIndexes,
     private val genIdMap: IdGenerator,
     private val collection: CollectionMap,
-) : kotlinx.document.database.KotlinxDbCollection {
+) : KotlinxDatabaseCollection {
 
     private suspend fun generateId() = genIdMap.update(name, 0L) { it + 1L }.newValue
 
@@ -60,9 +60,9 @@ class JsonCollection(
                 .mapNotNull {
                     val id = it.id ?: return@mapNotNull null
                     when (val value = it.select(query)) {
-                        is kotlinx.document.database.JsonObjectSelectionResult.Found -> value.value to id
-                        _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.NotFound -> return@mapNotNull null
-                        _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Null -> null to id
+                        is JsonObjectSelectionResult.Found -> value.value to id
+                        JsonObjectSelectionResult.NotFound -> return@mapNotNull null
+                        JsonObjectSelectionResult.Null -> null to id
                     }
                 }
                 .chunked(10)
@@ -95,9 +95,9 @@ class JsonCollection(
         findUsingIndex(selector, value)
             ?: iterateAll().filter {
                 when (val selection = it.select(selector)) {
-                    is _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Found -> selection.value == value
-                    _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.NotFound -> false
-                    _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Null -> when (value) {
+                    is JsonObjectSelectionResult.Found -> selection.value == value
+                    JsonObjectSelectionResult.NotFound -> false
+                    JsonObjectSelectionResult.Null -> when (value) {
                         null -> true
                         else -> false
                     }
@@ -113,9 +113,9 @@ class JsonCollection(
             ?.asSequence()
             ?.forEach { fieldSelector ->
                 val fieldValue = when (val objectSelectionResult = jsonObject.select(fieldSelector)) {
-                    is _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Found -> objectSelectionResult.value
-                    _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.NotFound -> return@forEach
-                    _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Null -> null
+                    is JsonObjectSelectionResult.Found -> objectSelectionResult.value
+                    JsonObjectSelectionResult.NotFound -> return@forEach
+                    JsonObjectSelectionResult.Null -> null
                 }
                 _getIndex(fieldSelector)?.update(fieldValue, emptySet()) { it - id }
             }
@@ -132,9 +132,9 @@ class JsonCollection(
                 ?.asSequence()
                 ?.forEach { fieldSelector ->
                     val fieldValue = when (val objectSelectionResult = value.select(fieldSelector)) {
-                        is _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Found -> objectSelectionResult.value
-                        _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.NotFound -> return@forEach
-                        _root_ide_package_.kotlinx.document.database.JsonObjectSelectionResult.Null -> null
+                        is JsonObjectSelectionResult.Found -> objectSelectionResult.value
+                        JsonObjectSelectionResult.NotFound -> return@forEach
+                        JsonObjectSelectionResult.Null -> null
                     }
 
                     _getIndex(fieldSelector)?.update(fieldValue, setOf(id)) { it + id }
@@ -158,11 +158,11 @@ class JsonCollection(
         indexMap.update(name, emptyList()) { it - selector }
     }
 
-    override suspend fun details() = _root_ide_package_.kotlinx.document.database.CollectionDetails(
+    override suspend fun details() = CollectionDetails(
         idGeneratorState = genIdMap.get(name) ?: 0L,
         indexes = indexMap.get(name)?.mapNotNull { getIndex(it) } ?: emptyList()
     )
 }
 
 private val JsonObject.id
-    get() = get(_root_ide_package_.kotlinx.document.database.KotlinxDocumentDatabase.Companion.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()
+    get() = get(KotlinxDocumentDatabase.Companion.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()

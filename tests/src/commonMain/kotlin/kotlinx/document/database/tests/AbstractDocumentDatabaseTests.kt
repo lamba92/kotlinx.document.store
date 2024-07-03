@@ -1,13 +1,19 @@
-package kotlinx.document.database
+@file:Suppress("FunctionName")
 
+package kotlinx.document.database.tests
+
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.getObjectCollection
 
-class DocumentDatabaseTests : MVDataStoreTest() {
+abstract class AbstractDocumentDatabaseTests(store: DataStore) : BaseTest(store) {
+
     @Test
-    fun `gets all collection names`() = runTest {
+    @JsName("gets_all_collection_names")
+    fun `gets all collection names`() = runDatabaseTest {
         db.getObjectCollection<TestUser>("test")
         db.getObjectCollection<TestUser>("test2")
 

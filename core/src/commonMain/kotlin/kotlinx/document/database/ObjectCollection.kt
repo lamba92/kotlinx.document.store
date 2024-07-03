@@ -10,8 +10,8 @@ import kotlinx.serialization.json.JsonPrimitive
 
 class ObjectCollection<T : Any>(
     private val serializer: KSerializer<T>,
-    val jsonCollection: _root_ide_package_.kotlinx.document.database.JsonCollection
-) : KotlinxDbCollection by jsonCollection {
+    val jsonCollection: JsonCollection
+) : KotlinxDatabaseCollection by jsonCollection {
 
     suspend fun find(selector: String, value: String?): Flow<T> = jsonCollection.find(selector, value)
         .map { json.decodeFromJsonElement(serializer, it) }

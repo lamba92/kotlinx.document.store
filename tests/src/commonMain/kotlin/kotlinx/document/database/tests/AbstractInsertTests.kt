@@ -1,17 +1,18 @@
-@file:OptIn(InternalSerializationApi::class)
+package kotlinx.document.database.tests
 
-package kotlinx.document.database
-
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.getObjectCollection
 import kotlinx.serialization.InternalSerializationApi
 
-class InsertTests : BaseTest(MVDataStore.open(dbPath)) {
+abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
 
     @Test
-    fun `inserts and retrieves a document`() = runTest {
+    @JsName("inserts_and_retrieves_a_document")
+    fun `inserts and retrieves a document`() = runDatabaseTest {
         val collection = db.getObjectCollection<TestUser>("test")
         val testUser = TestUser(
             name = "mario",

@@ -1,9 +1,12 @@
-package kotlinx.document.database
+package kotlinx.document.database.mvstore
 
 import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.PersistentMap
 import org.h2.mvstore.MVStore
 
 
@@ -13,6 +16,7 @@ class MVDataStore(
 
     companion object {
         fun open(path: Path) = MVStore.open(path.absolutePathString()).asDataStore()
+        fun open(path: String) = open(Path(path))
     }
 
     override suspend fun getMap(

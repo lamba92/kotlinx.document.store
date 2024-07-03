@@ -1,14 +1,15 @@
 package kotlinx.document.database
 
-import com.github.lamba92.kotlin.db.KotlinxDocumentDatabase.Companion.ID_PROPERTY_NAME
-import com.github.lamba92.kotlin.db.maps.asCollectionMap
-import com.github.lamba92.kotlin.db.maps.asIdGenerator
-import com.github.lamba92.kotlin.db.maps.asIndexOfIndexes
-import java.util.concurrent.ConcurrentHashMap
+import kotlin.jvm.JvmName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.document.database.KotlinxDocumentDatabase.Companion.ID_PROPERTY_NAME
+import kotlinx.document.database.maps.asCollectionMap
+import kotlinx.document.database.maps.asIdGenerator
+import kotlinx.document.database.maps.asIndexOfIndexes
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -16,7 +17,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
 
 class KotlinxDocumentDatabase internal constructor(
-    private val store: kotlinx.document.database.DataStore,
+    private val store: DataStore,
     private val json: Json
 ) : AutoCloseable by store {
 
@@ -27,14 +28,15 @@ class KotlinxDocumentDatabase internal constructor(
         const val COLLECTIONS = "collections"
     }
 
-    private val mutexMap = ConcurrentHashMap<String, Mutex>()
+    private val mutex = Mutex()
+    private val mutexMap = mutableMapOf<String, Mutex>()
 
-    suspend fun getJsonCollection(name: String): _root_ide_package_.kotlinx.document.database.JsonCollection {
+    suspend fun getJsonCollection(name: String): JsonCollection {
         store.getMap(COLLECTIONS).put(name, "")
-        return _root_ide_package_.kotlinx.document.database.JsonCollection(
+        return JsonCollection(
             name = name,
             json = json,
-            mutex = mutexMap.getOrPut(name) { Mutex() },
+            mutex = mutex.withLock { mutexMap.getOrPut(name) { Mutex() } },
             store = store,
             indexMap = store.getMap(INDEXES_MAP_NAME).asIndexOfIndexes(),
             genIdMap = store.getMap(ID_GEN_MAP_NAME).asIdGenerator(),
@@ -78,7 +80,7 @@ internal suspend fun <K, V> Flow<Map.Entry<K, V>>.toMap() = buildMap {
 suspend inline fun <reified T : Any> KotlinxDocumentDatabase.getObjectCollection(name: String) =
     getJsonCollection(name).toObjectCollection<T>()
 
-inline fun <reified T : Any> _root_ide_package_.kotlinx.document.database.JsonCollection.toObjectCollection() =
+inline fun <reified T : Any> JsonCollection.toObjectCollection() =
     ObjectCollection<T>(
         jsonCollection = this,
         serializer = json.serializersModule.serializer()

@@ -1,4 +1,4 @@
-package kotlinx.document.database
+package kotlinx.document.database.mvstore
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.document.database.PersistentMap
+import kotlinx.document.database.UpdateResult
 import org.h2.mvstore.MVMap
 
 class MVPersistentMap<K, V>(

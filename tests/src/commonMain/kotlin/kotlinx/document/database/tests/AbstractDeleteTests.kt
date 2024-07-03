@@ -1,13 +1,19 @@
-package kotlinx.document.database
+@file:Suppress("FunctionName")
 
+package kotlinx.document.database.tests
+
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.test.runTest
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.getObjectCollection
 
-class DeleteTests : BaseTest(MVDataStore.open(dbPath)) {
+abstract class AbstractDeleteTests(store: DataStore) : BaseTest(store) {
+
     @Test
-    fun `deletes collection`() = runTest {
+    @JsName("deletes_collection")
+    fun `deletes collection`() = runDatabaseTest {
         db.getObjectCollection<TestUser>("test")
         db.deleteCollection("test")
         assertEquals(
@@ -18,7 +24,8 @@ class DeleteTests : BaseTest(MVDataStore.open(dbPath)) {
     }
 
     @Test
-    fun `deleting a collection actually clears it`() = runTest {
+    @JsName("deleting_a_collection_actually_clears_it")
+    fun `deleting a collection actually clears it`() = runDatabaseTest {
         db.getObjectCollection<TestUser>("test").insert(TestUser.Mario)
         db.deleteCollection("test")
         assertEquals(
@@ -29,7 +36,8 @@ class DeleteTests : BaseTest(MVDataStore.open(dbPath)) {
     }
 
     @Test
-    fun `deleting a collection that does not exist does nothing`() = runTest {
+    @JsName("deleting_a_collection_that_does_not_exist_does_nothing")
+    fun `deleting a collection that does not exist does nothing`() = runDatabaseTest {
         db.deleteCollection("test")
         assertEquals(
             expected = 0,
