@@ -17,4 +17,5 @@ include(
     ":stores:mvstore",
     ":stores:rocksdb",
     ":stores:browser",
+    ":version-catalog",
 )

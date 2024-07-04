@@ -1,9 +1,9 @@
 package kotlinx.document.database
 
-interface DataStore : AutoCloseable {
-    suspend fun getMap(name: String): PersistentMap<String, String>
+public interface DataStore : AutoCloseable {
+    public suspend fun getMap(name: String): PersistentMap<String, String>
 
-    suspend fun deleteMap(name: String)
+    public suspend fun deleteMap(name: String)
 
     override fun close() {}
 }

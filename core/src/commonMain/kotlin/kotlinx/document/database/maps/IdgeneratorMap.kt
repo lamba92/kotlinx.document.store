@@ -3,13 +3,13 @@ package kotlinx.document.database.maps
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.document.database.PersistentMap
-import kotlinx.document.database.SimpleEntry
+import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
 
-fun PersistentMap<String, String>.asIdGenerator() = IdGenerator(this)
+public fun PersistentMap<String, String>.asIdGenerator(): IdGenerator = IdGenerator(this)
 
-class IdGenerator(private val delegate: PersistentMap<String, String>) : PersistentMap<String, Long> {
-    override suspend fun clear() = delegate.clear()
+public class IdGenerator(private val delegate: PersistentMap<String, String>) : PersistentMap<String, Long> {
+    override suspend fun clear(): Unit = delegate.clear()
 
     override suspend fun size(): Long = delegate.size()
 
@@ -50,5 +50,5 @@ class IdGenerator(private val delegate: PersistentMap<String, String>) : Persist
             defaultValue = { defaultValue().toString() },
         ).toLong()
 
-    override fun entries(): Flow<Map.Entry<String, Long>> = delegate.entries().map { SimpleEntry(it.key, it.value.toLong()) }
+    override fun entries(): Flow<Map.Entry<String, Long>> = delegate.entries().map { SerializableEntry(it.key, it.value.toLong()) }
 }

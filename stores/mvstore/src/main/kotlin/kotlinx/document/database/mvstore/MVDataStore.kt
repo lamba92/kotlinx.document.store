@@ -9,13 +9,13 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
-class MVDataStore(
+public class MVDataStore(
     private val delegate: MVStore,
 ) : DataStore {
-    companion object {
-        fun open(path: Path) = MVStore.open(path.absolutePathString()).asDataStore()
+    public companion object {
+        public fun open(path: Path): MVDataStore = MVStore.open(path.absolutePathString()).asDataStore()
 
-        fun open(path: String) = open(Path(path))
+        public fun open(path: String): MVDataStore = open(Path(path))
     }
 
     override suspend fun getMap(name: String): PersistentMap<String, String> =
@@ -27,9 +27,9 @@ class MVDataStore(
         withContext(Dispatchers.IO) { delegate.removeMap(name) }
     }
 
-    override fun close() = delegate.close()
+    override fun close(): Unit = delegate.close()
 }
 
-fun MVStore.asDataStore() = MVDataStore(this)
+public fun MVStore.asDataStore(): MVDataStore = MVDataStore(this)
 
-fun MVStore.Builder.openDataStore() = MVDataStore(open())
+public fun MVStore.Builder.openDataStore(): MVDataStore = MVDataStore(open())

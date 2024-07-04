@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 group = "com.github.lamba92"
@@ -10,10 +12,16 @@ plugins {
 
 plugins.withId("org.jetbrains.kotlin.jvm") {
     setupKotlin()
+    extensions.getByName<KotlinJvmProjectExtension>("kotlin").apply {
+        explicitApi()
+    }
 }
 
 plugins.withId("org.jetbrains.kotlin.multiplatform") {
     setupKotlin()
+    extensions.getByName<KotlinMultiplatformExtension>("kotlin").apply {
+        explicitApi()
+    }
 }
 
 tasks {
@@ -30,6 +38,8 @@ fun Project.setupKotlin() {
         .all {
             languageSettings {
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
+                optIn("kotlin.io.path.ExperimentalPathApi")
             }
         }
 }

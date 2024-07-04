@@ -3,19 +3,19 @@ package kotlinx.document.database.maps
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.document.database.PersistentMap
-import kotlinx.document.database.SimpleEntry
+import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-fun PersistentMap<String, String>.asIndexOfIndexes() = IndexOfIndexes(this)
+public fun PersistentMap<String, String>.asIndexOfIndexes(): IndexOfIndexes = IndexOfIndexes(this)
 
 private fun String.split() = Json.decodeFromString<List<String>>(this)
 
 private fun List<String>.join() = Json.encodeToString(this)
 
-class IndexOfIndexes(private val delegate: PersistentMap<String, String>) : PersistentMap<String, List<String>> {
-    override suspend fun clear() = delegate.clear()
+public class IndexOfIndexes(private val delegate: PersistentMap<String, String>) : PersistentMap<String, List<String>> {
+    override suspend fun clear(): Unit = delegate.clear()
 
     override suspend fun size(): Long = delegate.size()
 
@@ -56,5 +56,5 @@ class IndexOfIndexes(private val delegate: PersistentMap<String, String>) : Pers
             defaultValue = { defaultValue().join() },
         ).split()
 
-    override fun entries(): Flow<Map.Entry<String, List<String>>> = delegate.entries().map { SimpleEntry(it.key, it.value.split()) }
+    override fun entries(): Flow<Map.Entry<String, List<String>>> = delegate.entries().map { SerializableEntry(it.key, it.value.split()) }
 }

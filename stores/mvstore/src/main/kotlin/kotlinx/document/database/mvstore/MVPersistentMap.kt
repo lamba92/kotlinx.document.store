@@ -11,7 +11,7 @@ import kotlinx.document.database.PersistentMap
 import kotlinx.document.database.UpdateResult
 import org.h2.mvstore.MVMap
 
-class MVPersistentMap<K, V>(
+public class MVPersistentMap<K, V>(
     private val delegate: MVMap<K, V>,
 ) : PersistentMap<K, V> {
     override suspend fun get(key: K): V? = withContext(Dispatchers.IO) { delegate[key] }
@@ -19,17 +19,17 @@ class MVPersistentMap<K, V>(
     override suspend fun put(
         key: K,
         value: V,
-    ) = withContext(Dispatchers.IO) { delegate.put(key, value) }
+    ): V? = withContext(Dispatchers.IO) { delegate.put(key, value) }
 
     override suspend fun remove(key: K): V? = withContext(Dispatchers.IO) { delegate.remove(key) }
 
-    override suspend fun containsKey(key: K) = withContext(Dispatchers.IO) { delegate.containsKey(key) }
+    override suspend fun containsKey(key: K): Boolean = withContext(Dispatchers.IO) { delegate.containsKey(key) }
 
-    override suspend fun clear() = withContext(Dispatchers.IO) { delegate.clear() }
+    override suspend fun clear(): Unit = withContext(Dispatchers.IO) { delegate.clear() }
 
     override suspend fun size(): Long = withContext(Dispatchers.IO) { delegate.sizeAsLong() }
 
-    override suspend fun isEmpty() = withContext(Dispatchers.IO) { delegate.isEmpty() }
+    override suspend fun isEmpty(): Boolean = withContext(Dispatchers.IO) { delegate.isEmpty() }
 
     override fun entries(): Flow<Map.Entry<K, V>> =
         delegate.entries

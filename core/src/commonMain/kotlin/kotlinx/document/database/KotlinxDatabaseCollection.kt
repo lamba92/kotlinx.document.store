@@ -2,23 +2,23 @@ package kotlinx.document.database
 
 import kotlinx.serialization.json.Json
 
-interface KotlinxDatabaseCollection {
-    suspend fun size(): Long
+public interface KotlinxDatabaseCollection {
+    public suspend fun size(): Long
 
-    val name: String
-    val json: Json
+    public val name: String
+    public val json: Json
 
-    suspend fun createIndex(selector: String)
+    public suspend fun createIndex(selector: String)
 
-    suspend fun removeById(id: Long)
+    public suspend fun removeById(id: Long)
 
-    suspend fun dropIndex(selector: String)
+    public suspend fun dropIndex(selector: String)
 
-    suspend fun getAllIndexNames(): List<String>
+    public suspend fun getAllIndexNames(): List<String>
 
-    suspend fun getIndex(selector: String): Map<String?, Set<Long>>?
+    public suspend fun getIndex(selector: String): Map<String?, Set<Long>>?
 
-    suspend fun clear()
+    public suspend fun clear()
 
-    suspend fun details(): CollectionDetails
+    public suspend fun details(): CollectionDetails
 }

@@ -2,28 +2,29 @@ package kotlinx.document.database
 
 import kotlinx.serialization.json.Json
 
-class KotlinxDocumentDatabaseBuilder {
-    var json =
-        Json {
-            prettyPrint = true
-            ignoreUnknownKeys = true
-        }
+public class KotlinxDocumentDatabaseBuilder {
+    public var json: Json = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+    }
 
-    var store: DataStore? = null
+    public var store: DataStore? = null
 
-    fun build(): KotlinxDocumentDatabase =
+    public fun build(): KotlinxDocumentDatabase =
         KotlinxDocumentDatabase(
             store = store ?: error("Store must be provided"),
             json =
-                Json(json) {
-                    ignoreUnknownKeys = true
-                    encodeDefaults = true
-                },
+            Json(json) {
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+            },
         )
 }
 
 @Suppress("FunctionName")
-inline fun KotlinxDocumentDatabase(block: KotlinxDocumentDatabaseBuilder.() -> Unit) = KotlinxDocumentDatabaseBuilder().apply(block).build()
+public inline fun KotlinxDocumentDatabase(block: KotlinxDocumentDatabaseBuilder.() -> Unit): KotlinxDocumentDatabase =
+    KotlinxDocumentDatabaseBuilder().apply(block).build()
 
 @Suppress("FunctionName")
-fun KotlinxDocumentDatabase(store: DataStore) = KotlinxDocumentDatabase { this.store = store }
+public fun KotlinxDocumentDatabase(store: DataStore): KotlinxDocumentDatabase =
+    KotlinxDocumentDatabase { this.store = store }

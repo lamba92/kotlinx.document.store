@@ -10,7 +10,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.PersistentMap
-import kotlinx.document.database.SimpleEntry
+import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
 
 class IndexedDBStore(val databaseName: String) : DataStore {
@@ -75,7 +75,7 @@ class IndexedDBMap(val delegate: Store) : PersistentMap<String, String> {
             keyval.keys(delegate).await()
                 .asFlow()
                 .mapNotNull { key ->
-                    get(key)?.let { value -> SimpleEntry(key, value) }
+                    get(key)?.let { value -> SerializableEntry(key, value) }
                 }
                 .collect { emit(it) }
         }

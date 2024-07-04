@@ -64,7 +64,7 @@ import kotlinx.serialization.json.JsonPrimitive
  * - [JsonObjectSelectionResult.Null] if the last valid key or index points to a JsonNull.
  *
  */
-fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
+public fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
     val queue = query.toMutableList()
     var currentElement: JsonElement = this
 
@@ -91,7 +91,7 @@ fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
     }
 }
 
-fun JsonObject.select(query: String): JsonObjectSelectionResult = select(query.split("."))
+public fun JsonObject.select(query: String): JsonObjectSelectionResult = select(query.split("."))
 
 /**
  * `JsonObjectSelectionResult` is a sealed interface that represents the possible outcomes
@@ -109,21 +109,21 @@ fun JsonObject.select(query: String): JsonObjectSelectionResult = select(query.s
  *
  * @see [select]
  */
-sealed interface JsonObjectSelectionResult {
+public sealed interface JsonObjectSelectionResult {
     /**
      * `Found` represents a successful retrieval of a value from the JSON object.
      * The `value` property contains the retrieved value as a string.
      */
-    data class Found(val value: String) : JsonObjectSelectionResult
+    public data class Found(val value: String) : JsonObjectSelectionResult
 
     /**
      * `NotFound` represents an unsuccessful retrieval attempt from the `JsonObject`,
      * indicating that a segment does not correspond to a key in the JsonObject or an index in a `JsonArray`.
      */
-    data object NotFound : JsonObjectSelectionResult
+    public data object NotFound : JsonObjectSelectionResult
 
     /**
      * `Null` represents a situation where the desired segment in the `JsonObject` or `JsonArray` is `null`.
      */
-    data object Null : JsonObjectSelectionResult
+    public data object Null : JsonObjectSelectionResult
 }

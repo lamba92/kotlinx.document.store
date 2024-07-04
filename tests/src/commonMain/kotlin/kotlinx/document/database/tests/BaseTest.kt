@@ -1,13 +1,13 @@
 package kotlinx.document.database.tests
 
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
-import kotlinx.document.database.DataStore
-import kotlinx.document.database.KotlinxDocumentDatabase
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.KotlinxDocumentDatabase
 
 abstract class BaseTest(store: DataStore) : DatabaseDeleter {
     val db = KotlinxDocumentDatabase(store)
@@ -18,8 +18,11 @@ abstract class BaseTest(store: DataStore) : DatabaseDeleter {
         testBody: suspend TestScope.() -> Unit,
     ) = runTest(context, timeout) {
         deleteDatabase()
-        testBody()
-        db.close()
+        try {
+            testBody()
+        } finally {
+            deleteDatabase()
+        }
     }
 }
 

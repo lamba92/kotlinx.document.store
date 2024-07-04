@@ -20,7 +20,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-class JsonCollection(
+public class JsonCollection(
     override val name: String,
     override val json: Json,
     private val mutex: Mutex,
@@ -41,7 +41,7 @@ class JsonCollection(
 
     private suspend fun hasIndex(field: String) = indexMap.get(name)?.contains(field) ?: false
 
-    fun iterateAll() =
+    public fun iterateAll(): Flow<JsonObject> =
         collection
             .entries()
             .map { json.parseToJsonElement(it.value).jsonObject }
@@ -77,7 +77,7 @@ class JsonCollection(
         }
     }
 
-    suspend fun findById(id: Long): JsonObject? {
+    public suspend fun findById(id: Long): JsonObject? {
         return json.decodeFromString(
             string = collection.get(id) ?: return null,
         )
@@ -91,7 +91,7 @@ class JsonCollection(
         ?.asFlow()
         ?.mapNotNull { findById(it) }
 
-    suspend fun find(
+    public suspend fun find(
         selector: String,
         value: String?,
     ): Flow<JsonObject> =
@@ -108,7 +108,7 @@ class JsonCollection(
                 }
             }
 
-    override suspend fun removeById(id: Long) =
+    override suspend fun removeById(id: Long): Unit =
         mutex.withLock(this) {
             val jsonString = collection.remove(id) ?: return@withLock
             val jsonObject = json.parseToJsonElement(jsonString).jsonObject
@@ -126,7 +126,7 @@ class JsonCollection(
                 }
         }
 
-    suspend fun insert(value: JsonObject) {
+    public suspend fun insert(value: JsonObject) {
         val id = value.id ?: generateId()
         val jsonString = json.encodeToString(value.copy(id))
 
@@ -147,11 +147,11 @@ class JsonCollection(
         }
     }
 
-    override suspend fun size() = collection.size()
+    override suspend fun size(): Long = collection.size()
 
-    override suspend fun clear() = collection.clear()
+    override suspend fun clear(): Unit = collection.clear()
 
-    override suspend fun getAllIndexNames() = indexMap.get(name) ?: emptyList()
+    override suspend fun getAllIndexNames(): List<String> = indexMap.get(name) ?: emptyList()
 
     override suspend fun getIndex(selector: String): Map<String?, Set<Long>>? =
         getIndexInternal(selector)
@@ -164,7 +164,7 @@ class JsonCollection(
             indexMap.update(name, emptyList()) { it - selector }
         }
 
-    override suspend fun details() =
+    override suspend fun details(): CollectionDetails =
         CollectionDetails(
             idGeneratorState = genIdMap.get(name) ?: 0L,
             indexes = indexMap.get(name)?.mapNotNull { getIndex(it) } ?: emptyList(),
@@ -172,4 +172,4 @@ class JsonCollection(
 }
 
 private val JsonObject.id
-    get() = get(KotlinxDocumentDatabase.Companion.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()
+    get() = get(KotlinxDocumentDatabase.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()

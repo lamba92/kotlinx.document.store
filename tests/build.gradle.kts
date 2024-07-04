@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+
 plugins {
     convention
     kotlin("multiplatform")
@@ -14,6 +16,8 @@ kotlin {
     macosX64()
     iosArm64()
     iosX64()
+
+    explicitApi = ExplicitApiMode.Disabled
 
     sourceSets {
 
