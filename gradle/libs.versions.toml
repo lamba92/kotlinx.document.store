@@ -9,6 +9,7 @@ junit = "5.10.2"
 rocksdb = "8.0.0"
 kotlin-browser = "1.0.0-pre.764"
 
+
 [libraries]
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }

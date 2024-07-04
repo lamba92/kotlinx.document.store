@@ -16,14 +16,14 @@ import kotlinx.document.database.UpdateResult
 class IndexedDBStore(val databaseName: String) : DataStore {
 
     override suspend fun getMap(name: String): PersistentMap<String, String> =
-        IndexedDBMap(Store(databaseName, name), name)
+        IndexedDBMap(Store(databaseName, name))
 
     override suspend fun deleteMap(name: String) {
-        js("window").indexedDb
+//        js("window").indexedDb
     }
 }
 
-class IndexedDBMap(val delegate: Store, val name: String) : PersistentMap<String, String> {
+class IndexedDBMap(val delegate: Store) : PersistentMap<String, String> {
 
     private val mutex = Mutex()
 
@@ -33,7 +33,7 @@ class IndexedDBMap(val delegate: Store, val name: String) : PersistentMap<String
 
     override suspend fun isEmpty(): Boolean = size() == 0L
 
-    override suspend fun get(key: String) = keyval.get(key, delegate).await().toString()
+    override suspend fun get(key: String) = keyval.get(key, delegate).await()
 
     override suspend fun put(key: String, value: String) = mutex.withLock {
         val previous = get(key)

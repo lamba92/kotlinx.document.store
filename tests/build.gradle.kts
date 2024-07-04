@@ -10,6 +10,10 @@ kotlin {
     js {
         browser()
     }
+    macosArm64()
+    macosX64()
+    iosArm64()
+    iosX64()
 
     sourceSets {
 

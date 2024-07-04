@@ -5,27 +5,31 @@ plugins {
 
 kotlin {
     jvm()
-    sourceSets {
+    macosArm64()
+    macosX64()
+    iosArm64()
+    iosX64()
 
-        jvmMain {
+    sourceSets {
+        commonMain {
             dependencies {
-                implementation(libs.h2)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.coroutines.core)
+                implementation(projects.core)
+                api(libs.rocksdb.multiplatform)
+                api("org.jetbrains.kotlinx:kotlinx-io-core:0.3.5")
             }
         }
 
-        jvmTest {
+        commonTest {
             dependencies {
-                implementation(libs.junit.jupiter.api)
-                implementation(libs.junit.jupiter.engine)
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(kotlin("test-junit5"))
+                implementation(projects.tests)
             }
         }
 
     }
 
+}
+repositories {
+    mavenCentral()
 }
 
 

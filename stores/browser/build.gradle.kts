@@ -6,19 +6,13 @@ plugins {
 
 kotlin {
     js {
-        browser {
-            testTask {
-                useKarma {
-                    useChrome()
-                }
-            }
-        }
+        browser()
     }
     sourceSets {
         val jsMain by getting {
             dependencies {
                 api(npm("idb-keyval", "3.0.0"))
-                api(npm("idb", "8.0.0"))
+//                api(npm("idb", "8.0.0"))
             }
         }
         jsMain {

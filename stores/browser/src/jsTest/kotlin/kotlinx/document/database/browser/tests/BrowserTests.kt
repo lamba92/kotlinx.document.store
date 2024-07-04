@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package kotlinx.document.database.tests.mvstore
+package kotlinx.document.database.browser.tests
 
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
