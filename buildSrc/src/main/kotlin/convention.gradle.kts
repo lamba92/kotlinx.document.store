@@ -3,6 +3,10 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 group = "com.github.lamba92"
 version = "1.0-SNAPSHOT"
 
+plugins {
+    id("org.jlleitschuh.gradle.ktlint")
+}
+
 
 plugins.withId("org.jetbrains.kotlin.jvm") {
     setupKotlin()
@@ -25,7 +29,6 @@ fun Project.setupKotlin() {
         .getByName<NamedDomainObjectContainer<KotlinSourceSet>>("sourceSets")
         .all {
             languageSettings {
-                optIn("com.github.lamba92.kotlin.db.InternalDbApi")
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
             }
         }

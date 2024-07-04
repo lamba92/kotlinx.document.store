@@ -14,4 +14,3 @@ dependencies {
     testImplementation(libs.kotlinx.datetime)
     testImplementation(kotlin("test-junit5"))
 }
-

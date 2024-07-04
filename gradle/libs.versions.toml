@@ -8,6 +8,7 @@ kotlinx-datetime = "0.6.0"
 junit = "5.10.2"
 rocksdb = "8.0.0"
 kotlin-browser = "1.0.0-pre.764"
+ktlint-gradle = "12.1.1"
 
 
 [libraries]
@@ -22,6 +23,7 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 rocksdb-multiplatform = { module="io.maryk.rocksdb:rocksdb-multiplatform", version.ref="rocksdb" }
 kotlin-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-browser" }
+ktlint-gradle = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint-gradle" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

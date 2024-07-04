@@ -1,6 +1,5 @@
 package kotlin.kotlinx.document.database.rocksdb
 
-import kotlin.io.path.deleteExisting
 import kotlin.io.path.deleteIfExists
 import java.nio.file.Path as JavaPath
 import kotlin.io.path.Path as JavaPath

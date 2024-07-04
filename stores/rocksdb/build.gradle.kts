@@ -24,13 +24,8 @@ kotlin {
                 implementation(projects.tests)
             }
         }
-
     }
-
 }
 repositories {
     mavenCentral()
 }
-
-
-

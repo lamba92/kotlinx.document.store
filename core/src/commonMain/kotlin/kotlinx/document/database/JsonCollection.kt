@@ -29,24 +29,22 @@ class JsonCollection(
     private val genIdMap: IdGenerator,
     private val collection: CollectionMap,
 ) : KotlinxDatabaseCollection {
-
     private suspend fun generateId() = genIdMap.update(name, 0L) { it + 1L }.newValue
 
-    private suspend fun _getIndex(field: String) = when {
-        !hasIndex(field) -> null
-        else -> getIndexMap(field)
-    }
+    private suspend fun getIndexInternal(field: String) =
+        when {
+            !hasIndex(field) -> null
+            else -> getIndexMap(field)
+        }
 
+    private suspend fun getIndexMap(field: String) = store.getMap("$name.$field").asIndex()
 
-    private suspend fun getIndexMap(field: String) =
-        store.getMap("$name.$field").asIndex()
+    private suspend fun hasIndex(field: String) = indexMap.get(name)?.contains(field) ?: false
 
-    private suspend fun hasIndex(field: String) =
-        indexMap.get(name)?.contains(field) ?: false
-
-    fun iterateAll() = collection
-        .entries()
-        .map { json.parseToJsonElement(it.value).jsonObject }
+    fun iterateAll() =
+        collection
+            .entries()
+            .map { json.parseToJsonElement(it.value).jsonObject }
 
     override suspend fun createIndex(selector: String) {
         if (hasIndex(selector)) return
@@ -69,7 +67,7 @@ class JsonCollection(
                 .map {
                     it.groupBy(
                         keySelector = { it.first },
-                        valueTransform = { it.second }
+                        valueTransform = { it.second },
                     ).mapValues { it.value.toSet() }
                 }
                 .flatMapConcat { it.entries.asFlow() }
@@ -81,46 +79,52 @@ class JsonCollection(
 
     suspend fun findById(id: Long): JsonObject? {
         return json.decodeFromString(
-            string = collection.get(id) ?: return null
+            string = collection.get(id) ?: return null,
         )
     }
 
-    private suspend fun findUsingIndex(field: String, value: String?) =
-        _getIndex(field)
-            ?.get(value)
-            ?.asFlow()
-            ?.mapNotNull { findById(it) }
+    private suspend fun findUsingIndex(
+        field: String,
+        value: String?,
+    ) = getIndexInternal(field)
+        ?.get(value)
+        ?.asFlow()
+        ?.mapNotNull { findById(it) }
 
-    suspend fun find(selector: String, value: String?): Flow<JsonObject> =
+    suspend fun find(
+        selector: String,
+        value: String?,
+    ): Flow<JsonObject> =
         findUsingIndex(selector, value)
             ?: iterateAll().filter {
                 when (val selection = it.select(selector)) {
                     is JsonObjectSelectionResult.Found -> selection.value == value
                     JsonObjectSelectionResult.NotFound -> false
-                    JsonObjectSelectionResult.Null -> when (value) {
-                        null -> true
-                        else -> false
-                    }
+                    JsonObjectSelectionResult.Null ->
+                        when (value) {
+                            null -> true
+                            else -> false
+                        }
                 }
             }
 
+    override suspend fun removeById(id: Long) =
+        mutex.withLock(this) {
+            val jsonString = collection.remove(id) ?: return@withLock
+            val jsonObject = json.parseToJsonElement(jsonString).jsonObject
 
-    override suspend fun removeById(id: Long) = mutex.withLock(this) {
-        val jsonString = collection.remove(id) ?: return@withLock
-        val jsonObject = json.parseToJsonElement(jsonString).jsonObject
-
-        indexMap.get(name)
-            ?.asSequence()
-            ?.forEach { fieldSelector ->
-                val fieldValue = when (val objectSelectionResult = jsonObject.select(fieldSelector)) {
-                    is JsonObjectSelectionResult.Found -> objectSelectionResult.value
-                    JsonObjectSelectionResult.NotFound -> return@forEach
-                    JsonObjectSelectionResult.Null -> null
+            indexMap.get(name)
+                ?.asSequence()
+                ?.forEach { fieldSelector ->
+                    val fieldValue =
+                        when (val objectSelectionResult = jsonObject.select(fieldSelector)) {
+                            is JsonObjectSelectionResult.Found -> objectSelectionResult.value
+                            JsonObjectSelectionResult.NotFound -> return@forEach
+                            JsonObjectSelectionResult.Null -> null
+                        }
+                    getIndexInternal(fieldSelector)?.update(fieldValue, emptySet()) { it - id }
                 }
-                _getIndex(fieldSelector)?.update(fieldValue, emptySet()) { it - id }
-            }
-
-    }
+        }
 
     suspend fun insert(value: JsonObject) {
         val id = value.id ?: generateId()
@@ -131,13 +135,14 @@ class JsonCollection(
             indexMap.get(name)
                 ?.asSequence()
                 ?.forEach { fieldSelector ->
-                    val fieldValue = when (val objectSelectionResult = value.select(fieldSelector)) {
-                        is JsonObjectSelectionResult.Found -> objectSelectionResult.value
-                        JsonObjectSelectionResult.NotFound -> return@forEach
-                        JsonObjectSelectionResult.Null -> null
-                    }
+                    val fieldValue =
+                        when (val objectSelectionResult = value.select(fieldSelector)) {
+                            is JsonObjectSelectionResult.Found -> objectSelectionResult.value
+                            JsonObjectSelectionResult.NotFound -> return@forEach
+                            JsonObjectSelectionResult.Null -> null
+                        }
 
-                    _getIndex(fieldSelector)?.update(fieldValue, setOf(id)) { it + id }
+                    getIndexInternal(fieldSelector)?.update(fieldValue, setOf(id)) { it + id }
                 }
         }
     }
@@ -149,19 +154,21 @@ class JsonCollection(
     override suspend fun getAllIndexNames() = indexMap.get(name) ?: emptyList()
 
     override suspend fun getIndex(selector: String): Map<String?, Set<Long>>? =
-        _getIndex(selector)
+        getIndexInternal(selector)
             ?.entries()
             ?.toMap()
 
-    override suspend fun dropIndex(selector: String): Unit = mutex.withLock(this) {
-        store.deleteMap("$name.$selector")
-        indexMap.update(name, emptyList()) { it - selector }
-    }
+    override suspend fun dropIndex(selector: String): Unit =
+        mutex.withLock(this) {
+            store.deleteMap("$name.$selector")
+            indexMap.update(name, emptyList()) { it - selector }
+        }
 
-    override suspend fun details() = CollectionDetails(
-        idGeneratorState = genIdMap.get(name) ?: 0L,
-        indexes = indexMap.get(name)?.mapNotNull { getIndex(it) } ?: emptyList()
-    )
+    override suspend fun details() =
+        CollectionDetails(
+            idGeneratorState = genIdMap.get(name) ?: 0L,
+            indexes = indexMap.get(name)?.mapNotNull { getIndex(it) } ?: emptyList(),
+        )
 }
 
 private val JsonObject.id

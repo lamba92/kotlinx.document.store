@@ -1,6 +1,5 @@
 package kotlinx.document.database
 
-import kotlin.jvm.JvmName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -15,12 +14,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
+import kotlin.jvm.JvmName
 
 class KotlinxDocumentDatabase internal constructor(
     private val store: DataStore,
-    private val json: Json
+    private val json: Json,
 ) : AutoCloseable by store {
-
     companion object {
         const val ID_GEN_MAP_NAME = "id_gen"
         const val ID_PROPERTY_NAME = "_id"
@@ -40,7 +39,7 @@ class KotlinxDocumentDatabase internal constructor(
             store = store,
             indexMap = store.getMap(INDEXES_MAP_NAME).asIndexOfIndexes(),
             genIdMap = store.getMap(ID_GEN_MAP_NAME).asIdGenerator(),
-            collection = store.getMap(name).asCollectionMap()
+            collection = store.getMap(name).asCollectionMap(),
         )
     }
 
@@ -49,33 +48,33 @@ class KotlinxDocumentDatabase internal constructor(
         store.getMap(COLLECTIONS).remove(name)
     }
 
-    suspend fun getAllCollections() =
-        getAllCollectionNames().map { getJsonCollection(it) }
+    suspend fun getAllCollections() = getAllCollectionNames().map { getJsonCollection(it) }
 
     suspend fun getAllCollectionNames() =
         store.getMap(COLLECTIONS)
             .entries()
             .map { it.key }
 
-    suspend fun databaseDetails() = store.getMap(COLLECTIONS)
-        .entries()
-        .map { getJsonCollection(it.key).details() }
-        .toList()
+    suspend fun databaseDetails() =
+        store.getMap(COLLECTIONS)
+            .entries()
+            .map { getJsonCollection(it.key).details() }
+            .toList()
 }
 
 @Serializable
 data class CollectionDetails(
     val idGeneratorState: Long,
-    val indexes: List<Map<String?, Set<Long>>>
+    val indexes: List<Map<String?, Set<Long>>>,
 )
 
-
 @JvmName("toMapEntry")
-internal suspend fun <K, V> Flow<Map.Entry<K, V>>.toMap() = buildMap {
-    collect {
-        put(it.key, it.value)
+internal suspend fun <K, V> Flow<Map.Entry<K, V>>.toMap() =
+    buildMap {
+        collect {
+            put(it.key, it.value)
+        }
     }
-}
 
 suspend inline fun <reified T : Any> KotlinxDocumentDatabase.getObjectCollection(name: String) =
     getJsonCollection(name).toObjectCollection<T>()
@@ -83,8 +82,7 @@ suspend inline fun <reified T : Any> KotlinxDocumentDatabase.getObjectCollection
 inline fun <reified T : Any> JsonCollection.toObjectCollection() =
     ObjectCollection<T>(
         jsonCollection = this,
-        serializer = json.serializersModule.serializer()
+        serializer = json.serializersModule.serializer(),
     )
 
-internal fun JsonObject.copy(id: Long) =
-    JsonObject(toMutableMap().also { it[ID_PROPERTY_NAME] = JsonPrimitive(id) })
+internal fun JsonObject.copy(id: Long) = JsonObject(toMutableMap().also { it[ID_PROPERTY_NAME] = JsonPrimitive(id) })

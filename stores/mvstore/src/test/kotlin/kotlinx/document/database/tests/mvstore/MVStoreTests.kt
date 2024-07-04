@@ -2,8 +2,6 @@
 
 package kotlinx.document.database.tests.mvstore
 
-import kotlin.io.path.Path
-import kotlin.io.path.deleteIfExists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.document.database.mvstore.MVDataStore
@@ -13,20 +11,27 @@ import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
 import kotlinx.document.database.tests.DatabaseDeleter
+import kotlin.io.path.Path
+import kotlin.io.path.deleteIfExists
 
-class MVStoreDeleteTests : AbstractDeleteTests(MVDataStore.open(DB_PATH)),
+class MVStoreDeleteTests :
+    AbstractDeleteTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
-class MVStoreDocumentDatabaseTests : AbstractDocumentDatabaseTests(MVDataStore.open(DB_PATH)),
+class MVStoreDocumentDatabaseTests :
+    AbstractDocumentDatabaseTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
-class MVStoreIndexTests : AbstractIndexTests(MVDataStore.open(DB_PATH)),
+class MVStoreIndexTests :
+    AbstractIndexTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
-class MVStoreInsertTests : AbstractInsertTests(MVDataStore.open(DB_PATH)),
+class MVStoreInsertTests :
+    AbstractInsertTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
-class MVStoreObjectCollectionTests : AbstractObjectCollectionTests(MVDataStore.open(DB_PATH)),
+class MVStoreObjectCollectionTests :
+    AbstractObjectCollectionTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
 object MVStoreDeleter : DatabaseDeleter {

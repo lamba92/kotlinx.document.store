@@ -65,7 +65,6 @@ import kotlinx.serialization.json.JsonPrimitive
  *
  */
 fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
-
     val queue = query.toMutableList()
     var currentElement: JsonElement = this
 
@@ -77,8 +76,9 @@ fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
                 currentElement = currentElement.getOrNull(index) ?: return JsonObjectSelectionResult.NotFound
             }
 
-            currentElement is JsonObject -> currentElement = currentElement[currentSegment]
-                ?: return JsonObjectSelectionResult.NotFound
+            currentElement is JsonObject ->
+                currentElement = currentElement[currentSegment]
+                    ?: return JsonObjectSelectionResult.NotFound
 
             else -> return JsonObjectSelectionResult.NotFound
         }
@@ -91,8 +91,7 @@ fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
     }
 }
 
-fun JsonObject.select(query: String): JsonObjectSelectionResult =
-    select(query.split("."))
+fun JsonObject.select(query: String): JsonObjectSelectionResult = select(query.split("."))
 
 /**
  * `JsonObjectSelectionResult` is a sealed interface that represents the possible outcomes

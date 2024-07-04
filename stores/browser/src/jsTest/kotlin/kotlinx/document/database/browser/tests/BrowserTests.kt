@@ -2,9 +2,6 @@
 
 package kotlinx.document.database.browser.tests
 
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.document.database.browser.IndexedDBStore
 import kotlinx.document.database.tests.AbstractDeleteTests
 import kotlinx.document.database.tests.AbstractDocumentDatabaseTests
@@ -12,22 +9,30 @@ import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
 import kotlinx.document.database.tests.DatabaseDeleter
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 val databaseName = "a-test"
 
-class BrowserDeleteTests : AbstractDeleteTests(IndexedDBStore(databaseName)),
+class BrowserDeleteTests :
+    AbstractDeleteTests(IndexedDBStore(databaseName)),
     DatabaseDeleter by BrowserDeleter
 
-class BrowserDocumentDatabaseTests : AbstractDocumentDatabaseTests(IndexedDBStore(databaseName)),
+class BrowserDocumentDatabaseTests :
+    AbstractDocumentDatabaseTests(IndexedDBStore(databaseName)),
     DatabaseDeleter by BrowserDeleter
 
-class BrowserIndexTests : AbstractIndexTests(IndexedDBStore(databaseName)),
+class BrowserIndexTests :
+    AbstractIndexTests(IndexedDBStore(databaseName)),
     DatabaseDeleter by BrowserDeleter
 
-class BrowserInsertTests : AbstractInsertTests(IndexedDBStore(databaseName)),
+class BrowserInsertTests :
+    AbstractInsertTests(IndexedDBStore(databaseName)),
     DatabaseDeleter by BrowserDeleter
 
-class BrowserObjectCollectionTests : AbstractObjectCollectionTests(IndexedDBStore(databaseName)),
+class BrowserObjectCollectionTests :
+    AbstractObjectCollectionTests(IndexedDBStore(databaseName)),
     DatabaseDeleter by BrowserDeleter
 
 object BrowserDeleter : DatabaseDeleter {

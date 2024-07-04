@@ -23,10 +23,5 @@ kotlin {
                 api(libs.kotlinx.coroutines.core)
             }
         }
-
     }
-
 }
-
-
-

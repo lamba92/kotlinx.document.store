@@ -1,9 +1,9 @@
 package kotlinx.document.database.tests
 
-import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class TestUser(
@@ -22,5 +22,5 @@ data class TestUser(
 @Serializable
 data class Address(
     val street: String,
-    val number: Int
+    val number: Int,
 )
