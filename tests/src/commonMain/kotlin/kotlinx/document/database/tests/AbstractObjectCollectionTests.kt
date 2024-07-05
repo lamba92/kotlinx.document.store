@@ -13,8 +13,10 @@ abstract class AbstractObjectCollectionTests(store: DataStore) : BaseTest(store)
     @JsName("gets_all_collection_names")
     fun `Fails if collection type is not serializable`() =
         runDatabaseTest {
-            val collection = db.getObjectCollection<() -> Unit>("test")
-            assertFails { collection.insert { } }
+            assertFails {
+                val collection = db.getObjectCollection<() -> Unit>("test")
+                collection.insert { }
+            }
         }
 
     @Test

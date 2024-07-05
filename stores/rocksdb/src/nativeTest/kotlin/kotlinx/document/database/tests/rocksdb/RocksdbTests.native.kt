@@ -16,23 +16,23 @@ import platform.posix.readdir
 import platform.posix.remove
 import platform.posix.rmdir
 
-
 actual val DB_PATH: String
     get() = getenv("DB_PATH")?.toKStringFromUtf8() ?: error("DB_PATH not set")
 
-actual suspend fun Path.deleteRecursively() = withContext(Dispatchers.IO) {
-    deleteFolderRecursively(toString())
-}
+actual suspend fun Path.deleteRecursively() =
+    withContext(Dispatchers.IO) {
+        deleteFolderRecursively(toString())
+    }
 
 fun deleteFolderRecursively(path: String) {
     // Create a memory scope to manage memory allocation and deallocation automatically
     memScoped {
         // Open the directory specified by the path
-        val dir = opendir(path) ?: return@memScoped  // If the directory can't be opened, exit the scope
+        val dir = opendir(path) ?: return@memScoped // If the directory can't be opened, exit the scope
         try {
             while (true) {
                 // Read the next entry in the directory
-                val entry = readdir(dir) ?: break  // If there are no more entries, exit the loop
+                val entry = readdir(dir) ?: break // If there are no more entries, exit the loop
                 // Get the name of the entry
                 val name = entry.pointed.d_name.toKString()
                 // Skip the special entries "." and ".." which refer to the current and parent directories
@@ -57,5 +57,3 @@ fun deleteFolderRecursively(path: String) {
         rmdir(path)
     }
 }
-
-

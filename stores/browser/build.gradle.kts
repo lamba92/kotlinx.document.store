@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+
 plugins {
     convention
     kotlin("multiplatform")
@@ -8,11 +10,11 @@ kotlin {
     js {
         browser()
     }
+    explicitApi = ExplicitApiMode.Disabled
     sourceSets {
         val jsMain by getting {
             dependencies {
-                api(npm("idb-keyval", "3.0.0"))
-//                api(npm("idb", "8.0.0"))
+                api(npm("idb-keyval", "6.2.1"))
             }
         }
         jsMain {

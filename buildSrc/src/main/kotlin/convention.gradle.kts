@@ -3,8 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+val GITHUB_REF: String? = System.getenv("GITHUB_REF")
+
 group = "com.github.lamba92"
-version = "1.0-SNAPSHOT"
+version = when {
+    GITHUB_REF?.startsWith("refs/tags/") == true -> GITHUB_REF.substringAfter("refs/tags/")
+    else -> "1.0.0-SNAPSHOT"
+}
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint")
@@ -70,7 +75,6 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.silenceOptIns() = all {
     }
 }
 
-
 signing {
     val secretKey: String? = System.getenv("SECRET_KEY")
     val password: String? = System.getenv("SECRET_KEY_PASSWORD")
@@ -84,9 +88,18 @@ signing {
 }
 
 publishing {
+
     repositories {
         maven(rootProject.layout.buildDirectory.dir("mavenRepo")) {
             name = "test"
+        }
+        maven {
+            name = "Space"
+            setUrl("https://packages.jetbrains.team/maven/p/kpm/public")
+            credentials {
+                username = System.getenv("MAVEN_SPACE_USERNAME")
+                password = System.getenv("MAVEN_SPACE_PASSWORD")
+            }
         }
     }
 
@@ -98,3 +111,10 @@ publishing {
     }
 
 }
+
+tasks {
+    check {
+        dependsOn(ktlintCheck)
+    }
+}
+

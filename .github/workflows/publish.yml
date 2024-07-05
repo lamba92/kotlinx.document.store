@@ -1,0 +1,22 @@
+on:
+  push:
+    branches: [ master ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    env:
+      DISABLE_ROCKSDB: true
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/gradle-build-action@v3
+      - name: Publish
+        run: ./gradlew publishAllPublicationsToSpaceRepository
+        env:
+          MAVEN_SPACE_USERNAME: ${{ secrets.MAVEN_SPACE_USERNAME }}
+          MAVEN_SPACE_PASSWORD: ${{ secrets.MAVEN_SPACE_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SECRET_KEY_PASSWORD: ${{ secrets.SECRET_KEY_PASSWORD }}
+

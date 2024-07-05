@@ -11,19 +11,16 @@ import maryk.rocksdb.openRocksDB
 import maryk.rocksdb.use
 
 public class RocksdbDataStore(private val delegate: RocksDB) : DataStore {
-
     public companion object {
+        public fun open(path: String): RocksdbDataStore = RocksdbDataStore(openRocksDB(path))
 
-        public fun open(path: String): RocksdbDataStore =
-            RocksdbDataStore(openRocksDB(path))
-
-        public fun open(options: Options, path: String): RocksdbDataStore =
-            RocksdbDataStore(openRocksDB(options, path))
-
+        public fun open(
+            options: Options,
+            path: String,
+        ): RocksdbDataStore = RocksdbDataStore(openRocksDB(options, path))
     }
 
-    override suspend fun getMap(name: String): PersistentMap<String, String> =
-        RocksdbPersistentMap(delegate, name)
+    override suspend fun getMap(name: String): PersistentMap<String, String> = RocksdbPersistentMap(delegate, name)
 
     override suspend fun deleteMap(name: String) {
         delegate.deletePrefix(name)

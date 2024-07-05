@@ -48,8 +48,7 @@ public class KotlinxDocumentDatabase internal constructor(
         store.getMap(COLLECTIONS).remove(name)
     }
 
-    public suspend fun getAllCollections(): Flow<JsonCollection> =
-        getAllCollectionNames().map { getJsonCollection(it) }
+    public suspend fun getAllCollections(): Flow<JsonCollection> = getAllCollectionNames().map { getJsonCollection(it) }
 
     public suspend fun getAllCollectionNames(): Flow<String> =
         store.getMap(COLLECTIONS)
@@ -86,5 +85,4 @@ public inline fun <reified T : Any> JsonCollection.toObjectCollection(): ObjectC
         serializer = json.serializersModule.serializer(),
     )
 
-internal fun JsonObject.copy(id: Long) =
-    JsonObject(toMutableMap().also { it[ID_PROPERTY_NAME] = JsonPrimitive(id) })
+internal fun JsonObject.copy(id: Long) = JsonObject(toMutableMap().also { it[ID_PROPERTY_NAME] = JsonPrimitive(id) })

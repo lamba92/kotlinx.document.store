@@ -5,7 +5,10 @@ import kotlinx.coroutines.flow.Flow
 public interface PersistentMap<K, V> : AutoCloseable {
     public suspend fun get(key: K): V?
 
-    public suspend fun put(key: K, value: V): V?
+    public suspend fun put(
+        key: K,
+        value: V,
+    ): V?
 
     public suspend fun remove(key: K): V?
 

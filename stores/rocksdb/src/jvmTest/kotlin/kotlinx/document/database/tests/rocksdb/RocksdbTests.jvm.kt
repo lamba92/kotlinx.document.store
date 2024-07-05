@@ -1,8 +1,8 @@
 package kotlinx.document.database.tests.rocksdb
 
-import kotlin.io.path.deleteRecursively
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.io.path.deleteRecursively
 import kotlin.io.path.Path as JavaPath
 import kotlinx.io.files.Path as KotlinxPath
 

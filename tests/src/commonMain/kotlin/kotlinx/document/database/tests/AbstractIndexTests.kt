@@ -60,7 +60,7 @@ abstract class AbstractIndexTests(store: DataStore) : BaseTest(store) {
                     ?.jsonPrimitive
                     ?.long
                     ?: error("No id found")
-
+            println(json.encodeToString(db.databaseDetails()))
             assertEquals(
                 expected = userId,
                 actual = collection.getIndex("name")?.get("mario")?.single(),

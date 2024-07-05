@@ -32,8 +32,7 @@ class RocksdbObjectCollectionTests :
     DatabaseDeleter by RocksdbDeleter
 
 object RocksdbDeleter : DatabaseDeleter {
-    override suspend fun deleteDatabase() =
-        Path(DB_PATH).deleteRecursively()
+    override suspend fun deleteDatabase() = Path(DB_PATH).deleteRecursively()
 }
 
 expect suspend fun Path.deleteRecursively()
