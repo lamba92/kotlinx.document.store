@@ -82,9 +82,10 @@ val secretKey: String? = System.getenv("SECRET_KEY")
 
 val password: String? = System.getenv("SECRET_KEY_PASSWORD")
     ?: rootProject.file("local.properties")
-        .readLines()
-        .map { it.split("=") }
-        .find { it.first() == "secret.password" }
+        .takeIf { it.exists() }
+        ?.readLines()
+        ?.map { it.split("=") }
+        ?.find { it.first() == "secret.password" }
         ?.get(1)
 
 
