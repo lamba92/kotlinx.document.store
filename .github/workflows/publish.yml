@@ -4,11 +4,14 @@ on:
   release:
     types: [ published ]
 
+name: Publish to Space
+
 jobs:
   build:
     env:
+      # to build RocksDB macos is required, but tests do not pass anyway
       DISABLE_ROCKSDB: true
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/gradle-build-action@v3

@@ -75,11 +75,21 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.silenceOptIns() = all {
     }
 }
 
-signing {
-    val secretKey: String? = System.getenv("SECRET_KEY")
-    val password: String? = System.getenv("SECRET_KEY_PASSWORD")
+val secretKey: String? = System.getenv("SECRET_KEY")
+    ?: rootProject.file("secret.txt")
+        .takeIf { it.exists() }
+        ?.readText()
 
-    if (secretKey != null && password != null) {
+val password: String? = System.getenv("SECRET_KEY_PASSWORD")
+    ?: rootProject.file("local.properties")
+        .readLines()
+        .map { it.split("=") }
+        .find { it.first() == "secret.password" }
+        ?.get(1)
+
+
+if (secretKey != null && password != null) {
+    signing {
         useInMemoryPgpKeys(secretKey, password)
         publishing.publications.all {
             sign(this)
@@ -115,6 +125,11 @@ publishing {
 tasks {
     check {
         dependsOn(ktlintCheck)
+    }
+
+    // workaround https://github.com/gradle/gradle/issues/26091
+    withType<PublishToMavenRepository> {
+        dependsOn(withType<Sign>())
     }
 }
 
