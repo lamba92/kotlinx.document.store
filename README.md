@@ -6,10 +6,10 @@ A Kotlin Multiplatform embedded nosql document database. kotlinx.document.store 
 
 - **Multiplatform**: 
   - :heavy_check_mark: JVM (MVStore, RocksDB)
-     - `org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
+     - `com.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
   - :heavy_check_mark: JS/Browser (IndexedDB idb-keyval)
     
-    `org.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
+    `com.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
   - :hourglass: macOS (RockDB)
   - :hourglass: iOS (RockDB)
   - :x: watchOs
@@ -87,17 +87,17 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.github.lamba92:kotlinx-document-store-core:1.0.0-SNAPSHOT")
+                implementation("com.github.lamba92:kotlinx-document-store-core:1.0.0-SNAPSHOT")
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation("org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT")
+                implementation("com.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT")
             }
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT")
+                implementation("com.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT")
             }
         }
     }
@@ -105,7 +105,7 @@ kotlin {
 
 // build.gradle.kts Kotlin/JVM
 dependencies {
-    implementation("org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT")
+    implementation("com.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT")
 }
 ```
 
@@ -118,9 +118,35 @@ dependecyResolutionManagement {
         maven("https://packages.jetbrains.team/maven/p/kpm/public")
     }
     versionCatalogs {
-        create("kotlinx-document-store") {
-            from("org.github.lamba92:kotlinx-document-store-version-catalog:1.0.0-SNAPSHOT")
+        create("kotlinx-document-store") { // you can name it as you like, it will change the name of the variable
+            from("com.github.lamba92:kotlinx-document-store-version-catalog:1.0.0-SNAPSHOT")
         }
     }
+}
+
+// build.gradle.kts Kotlin/Multiplatform
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlinxDocumentStore.core)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+              implementation(kotlinxDocumentStore.mvstore)
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlinxDocumentStore.browser)
+            }
+        }
+    }
+}
+
+// build.gradle.kts Kotlin/JVM
+dependencies {
+    implementation(kotlinxDocumentStore.mvstore)
 }
 ```
