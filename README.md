@@ -5,16 +5,16 @@ A Kotlin Multiplatform embedded nosql document database. kotlinx.document.store 
 ## Features
 
 - **Multiplatform**: 
-  - :done: JVM (MVStore, RocksDB)
+  - :heavy_check_mark: JVM (MVStore, RocksDB)
     `org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
-  - :done: JS/Browser (IndexedDB idb-keyval)
+  - :heavy_check_mark: JS/Browser (IndexedDB idb-keyval)
     `org.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
-  - :loading: macOS (RockDB)
-  - :loading: iOS (RockDB)
-  - :no: watchOs
-  - :no: tvOs
-  - :no: Linux
-  - :no: Windows
+  - :hourglass: macOS (RockDB)
+  - :hourglass: iOS (RockDB)
+  - :x: watchOs
+  - :x: tvOs
+  - :x: Linux
+  - :x: Windows
 
 - **Simple**
 
