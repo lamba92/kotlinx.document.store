@@ -1,6 +1,6 @@
-# kotlinx.document.store
+# Kotlin Multiplatform Embedded NoSql Document Database
 
-A Kotlin Multiplatform embedded nosql document database. kotlinx.document.store is an abstraction on top of platform-specific key-value stores like RocksDB, MVStore, etc. It provides a simple API to store and retrieve documents.
+Kotlinx.document.store is an abstraction on top of platform-specific key-value stores like RocksDB, MVStore, etc. It provides a simple API to store and retrieve JSON documents.
 
 ## Features
 
