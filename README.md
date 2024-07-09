@@ -6,8 +6,9 @@ A Kotlin Multiplatform embedded nosql document database. kotlinx.document.store 
 
 - **Multiplatform**: 
   - :heavy_check_mark: JVM (MVStore, RocksDB)
-    `org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
+     - `org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
   - :heavy_check_mark: JS/Browser (IndexedDB idb-keyval)
+    
     `org.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
   - :hourglass: macOS (RockDB)
   - :hourglass: iOS (RockDB)
@@ -105,5 +106,21 @@ kotlin {
 // build.gradle.kts Kotlin/JVM
 dependencies {
     implementation("org.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT")
+}
+```
+
+We also publish the [version catalog](./gradle/libs.versions.toml) for kotlinx.document.store, so you can use it in your project:
+
+```kotlin
+// settings.gradle.kts
+dependecyResolutionManagement {
+    repositories {
+        maven("https://packages.jetbrains.team/maven/p/kpm/public")
+    }
+    versionCatalogs {
+        create("kotlinx-document-store") {
+            from("org.github.lamba92:kotlinx-document-store-version-catalog:1.0.0-SNAPSHOT")
+        }
+    }
 }
 ```
