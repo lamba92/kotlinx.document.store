@@ -2,10 +2,6 @@
 
 package kotlinx.document.database.tests
 
-import kotlin.js.JsName
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.first
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.getObjectCollection
@@ -13,6 +9,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
+import kotlin.js.JsName
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 abstract class AbstractIndexTests(store: DataStore) : BaseTest(store) {
     companion object {

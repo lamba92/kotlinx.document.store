@@ -16,8 +16,8 @@ val replaceVersion by tasks.registering {
                     .readText()
                     .replace(
                         oldValue = "%%%VERSION%%%",
-                        newValue = project.version.toString()
-                    )
+                        newValue = project.version.toString(),
+                    ),
             )
     }
 }
@@ -39,4 +39,3 @@ publishing {
         }
     }
 }
-
