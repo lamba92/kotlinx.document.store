@@ -77,14 +77,14 @@ public class RocksdbPersistentMap(
     override fun entries(): Flow<Map.Entry<String, String>> =
         flow {
             delegate.newIterator().use {
-                it.seek(prefix.encodeToByteArray())
+                it.seek("${prefix}_".encodeToByteArray())
                 while (it.isValid()) {
                     val key = it.key().decodeToString()
                     when {
                         key.startsWith(prefix) ->
                             emit(
                                 SerializableEntry(
-                                    key = key.removePrefix(prefix),
+                                    key = key.removePrefix("${prefix}_"),
                                     value = it.value().decodeToString(),
                                 ),
                             )

@@ -6,9 +6,9 @@ import kotlinx.document.database.PersistentMap
 import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
 
-public fun PersistentMap<String, String>.asCollectionMap(): CollectionMap = CollectionMap(this)
+public fun PersistentMap<String, String>.asCollectionMap(): Collection = Collection(this)
 
-public class CollectionMap(private val delegate: PersistentMap<String, String>) : PersistentMap<Long, String> {
+public class Collection(private val delegate: PersistentMap<String, String>) : PersistentMap<Long, String> {
     override suspend fun clear(): Unit = delegate.clear()
 
     override suspend fun size(): Long = delegate.size()
@@ -50,5 +50,7 @@ public class CollectionMap(private val delegate: PersistentMap<String, String>) 
             defaultValue = { defaultValue() },
         )
 
-    override fun entries(): Flow<Map.Entry<Long, String>> = delegate.entries().map { SerializableEntry(it.key.toLong(), it.value) }
+    override fun entries(): Flow<Map.Entry<Long, String>> =
+        delegate.entries()
+            .map { SerializableEntry(it.key.toLong(), it.value) }
 }

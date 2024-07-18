@@ -1,9 +1,12 @@
+@file:Suppress("OPT_IN_USAGE")
+
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 
 plugins {
     convention
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    kotlin("plugin.power-assert")
 }
 
 kotlin {
@@ -42,4 +45,11 @@ kotlin {
             }
         }
     }
+}
+
+powerAssert {
+    functions =
+        setOf(
+            "kotlin.test.assertEquals",
+        )
 }

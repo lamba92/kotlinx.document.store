@@ -21,7 +21,7 @@ actual val DB_PATH: String
 
 actual suspend fun Path.deleteRecursively() =
     withContext(Dispatchers.IO) {
-        deleteFolderRecursively(toString())
+        deleteFolderRecursively(this@deleteRecursively.toString())
     }
 
 fun deleteFolderRecursively(path: String) {
@@ -29,6 +29,7 @@ fun deleteFolderRecursively(path: String) {
     memScoped {
         // Open the directory specified by the path
         val dir = opendir(path) ?: return@memScoped // If the directory can't be opened, exit the scope
+        println("Deleting folder $path")
         try {
             while (true) {
                 // Read the next entry in the directory
@@ -46,6 +47,7 @@ fun deleteFolderRecursively(path: String) {
                     deleteFolderRecursively(fullPath)
                 } else {
                     // If it's a file, delete it
+                    println("Deleting $name")
                     remove(fullPath)
                 }
             }
@@ -55,5 +57,6 @@ fun deleteFolderRecursively(path: String) {
         }
         // After all contents have been processed, remove the directory itself
         rmdir(path)
+        println("Deleted folder $path")
     }
 }

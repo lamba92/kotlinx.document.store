@@ -15,7 +15,7 @@ kotlin {
             dependencies {
                 implementation(projects.core)
                 api(libs.rocksdb.multiplatform)
-                api("org.jetbrains.kotlinx:kotlinx-io-core:0.3.5")
+                api(libs.kotlinx.io.core)
             }
         }
 
@@ -25,7 +25,4 @@ kotlin {
             }
         }
     }
-}
-repositories {
-    mavenCentral()
 }

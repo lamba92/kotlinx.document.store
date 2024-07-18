@@ -2,6 +2,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeHostTest
 
 val GITHUB_REF: String? = System.getenv("GITHUB_REF")
 
@@ -57,13 +58,6 @@ plugins.withId("org.jetbrains.kotlin.multiplatform") {
                 artifact(javadocJar)
             }
         }
-    }
-}
-
-tasks {
-    withType<Test> {
-        environment("DB_PATH", layout.buildDirectory.file("test.db").get().asFile.absolutePath)
-        useJUnitPlatform()
     }
 }
 
@@ -131,6 +125,14 @@ tasks {
     // workaround https://github.com/gradle/gradle/issues/26091
     withType<PublishToMavenRepository> {
         dependsOn(withType<Sign>())
+    }
+
+    withType<Test> {
+        environment("DB_PATH", layout.buildDirectory.file("test.db").get().asFile.absolutePath)
+        useJUnitPlatform()
+    }
+    withType<KotlinNativeHostTest> {
+        environment("DB_PATH", layout.buildDirectory.file("test.db").get().asFile.absolutePath)
     }
 }
 

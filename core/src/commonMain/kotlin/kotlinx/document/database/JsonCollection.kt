@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.document.database.maps.CollectionMap
+import kotlinx.document.database.maps.Collection
 import kotlinx.document.database.maps.IdGenerator
 import kotlinx.document.database.maps.IndexOfIndexes
 import kotlinx.document.database.maps.asIndex
@@ -27,7 +27,7 @@ public class JsonCollection(
     private val store: DataStore,
     private val indexMap: IndexOfIndexes,
     private val genIdMap: IdGenerator,
-    private val collection: CollectionMap,
+    private val collection: Collection,
 ) : KotlinxDatabaseCollection {
     private suspend fun generateId() = genIdMap.update(name, 0L) { it + 1L }.newValue
 
@@ -37,7 +37,7 @@ public class JsonCollection(
             else -> getIndexMap(field)
         }
 
-    private suspend fun getIndexMap(field: String) = store.getMap("$name.$field").asIndex()
+    private suspend fun getIndexMap(field: String) = store.getMap("index:$name:$field").asIndex()
 
     private suspend fun hasIndex(field: String) = indexMap.get(name)?.contains(field) ?: false
 
@@ -46,14 +46,16 @@ public class JsonCollection(
             .entries()
             .map { json.parseToJsonElement(it.value).jsonObject }
 
-    override suspend fun createIndex(selector: String) {
-        if (hasIndex(selector)) return
+    override suspend fun createIndex(selector: String): Unit =
+        mutex.withLock {
+            if (hasIndex(selector)) return
 
-        val index = getIndexMap(selector)
-        indexMap.update(name, listOf(selector)) { it + selector }
+            val index = getIndexMap(selector)
+            indexMap.update(name, listOf(selector)) { it + selector }
 
-        val query = selector.split(".")
-        mutex.withLock(this) {
+            val query =
+                selector
+                    .split(".")
             iterateAll()
                 .mapNotNull {
                     val id = it.id ?: return@mapNotNull null
@@ -75,7 +77,6 @@ public class JsonCollection(
                     index.update(fieldValue, ids) { it + ids }
                 }
         }
-    }
 
     public suspend fun findById(id: Long): JsonObject? {
         return json.decodeFromString(
@@ -132,18 +133,16 @@ public class JsonCollection(
 
         mutex.withLock(this) {
             collection.put(id, jsonString)
-            indexMap.get(name)
-                ?.asSequence()
-                ?.forEach { fieldSelector ->
-                    val fieldValue =
-                        when (val objectSelectionResult = value.select(fieldSelector)) {
-                            is JsonObjectSelectionResult.Found -> objectSelectionResult.value
-                            JsonObjectSelectionResult.NotFound -> return@forEach
-                            JsonObjectSelectionResult.Null -> null
-                        }
+            indexMap.get(name)?.forEach { fieldSelector ->
+                val fieldValue =
+                    when (val objectSelectionResult = value.select(fieldSelector)) {
+                        is JsonObjectSelectionResult.Found -> objectSelectionResult.value
+                        JsonObjectSelectionResult.NotFound -> return@forEach
+                        JsonObjectSelectionResult.Null -> null
+                    }
 
-                    getIndexInternal(fieldSelector)?.update(fieldValue, setOf(id)) { it + id }
-                }
+                getIndexInternal(fieldSelector)?.update(fieldValue, setOf(id)) { it + id }
+            }
         }
     }
 
