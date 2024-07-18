@@ -4,9 +4,31 @@ plugins {
     `maven-publish`
 }
 
+val output = layout.buildDirectory.file("libs.versions.toml")
+val replaceVersion by tasks.registering {
+    val input = file("libs.versions.toml")
+    inputs.file(input)
+    doLast {
+        output.get()
+            .asFile
+            .writeText(
+                input
+                    .readText()
+                    .replace(
+                        oldValue = "%%%VERSION%%%",
+                        newValue = project.version.toString()
+                    )
+            )
+    }
+}
+
+tasks.generateCatalogAsToml {
+    dependsOn(replaceVersion)
+}
+
 catalog {
     versionCatalog {
-        from(files("libs.versions.toml"))
+        from(files(output))
     }
 }
 
@@ -17,3 +39,4 @@ publishing {
         }
     }
 }
+

@@ -19,15 +19,9 @@ include(
     ":tests",
     ":stores:mvstore",
     ":stores:browser",
+    ":stores:rocksdb",
     ":version-catalog",
 )
-
-val isRocksdbDisabled: Boolean
-    get()= System.getenv("DISABLE_ROCKSDB") == "true"
-
-if (!isRocksdbDisabled) {
-    include(":stores:rocksdb")
-}
 
 gradleEnterprise {
     buildScan {

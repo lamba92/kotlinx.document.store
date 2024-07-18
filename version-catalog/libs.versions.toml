@@ -1,9 +1,10 @@
 [versions]
-kotlinx-document-store="1.0.0-SNAPSHOT"
+kotlinx-document-store="%%%VERSION%%%"
 
 
 [libraries]
 core = { module = "com.github.lamba92:kotlinx-document-store-core", version.ref = "kotlinx-document-store" }
 mvstore = { module = "com.github.lamba92:kotlinx-document-store-mvstore", version.ref = "kotlinx-document-store" }
 browser = { module = "com.github.lamba92:kotlinx-document-store-browser", version.ref = "kotlinx-document-store" }
+rocksdb = { module = "com.github.lamba92:kotlinx-document-store-rocksdb", version.ref = "kotlinx-document-store" }
 

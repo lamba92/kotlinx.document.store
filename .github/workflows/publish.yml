@@ -8,9 +8,6 @@ name: Publish to Space
 
 jobs:
   build:
-    env:
-      # to build RocksDB macos is required, but tests do not pass anyway
-      DISABLE_ROCKSDB: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

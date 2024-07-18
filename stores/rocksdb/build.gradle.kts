@@ -4,11 +4,15 @@ plugins {
 }
 
 kotlin {
+
     jvm()
-    macosArm64()
-    macosX64()
-    iosArm64()
-    iosX64()
+
+    if (System.getenv("CI") != "true") {
+        macosArm64()
+        macosX64()
+        iosArm64()
+        iosX64()
+    }
 
     sourceSets {
         commonMain {
