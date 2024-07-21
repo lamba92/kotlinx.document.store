@@ -1,3 +1,6 @@
+import kotlin.io.path.createDirectories
+import kotlin.io.path.writeText
+
 plugins {
     convention
     `version-catalog`
@@ -10,7 +13,8 @@ val replaceVersion by tasks.registering {
     inputs.file(input)
     doLast {
         output.get()
-            .asFile
+            .asPath
+            .apply { parent.createDirectories() }
             .writeText(
                 input
                     .readText()
