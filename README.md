@@ -7,11 +7,13 @@ Kotlinx.document.store is an abstraction on top of platform-specific key-value s
 - **Multiplatform**: 
   - :heavy_check_mark: JVM (MVStore, RocksDB)
      - `com.github.lamba92:kotlinx-document-store-mvstore:1.0.0-SNAPSHOT`
-  - :heavy_check_mark: JS/Browser (IndexedDB idb-keyval)
-    
-    `com.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
+     - `com.github.lamba92:kotlinx-document-store-rocksdb:1.0.0-SNAPSHOT`
+  - :heavy_check_mark: JS/Browser (IndexedDB [idb-keyval](https://www.npmjs.com/package/idb-keyval))
+    - `com.github.lamba92:kotlinx-document-store-browser:1.0.0-SNAPSHOT`
   - :hourglass: macOS (RockDB)
+    - `com.github.lamba92:kotlinx-document-store-rocksdb:1.0.0-SNAPSHOT`
   - :hourglass: iOS (RockDB)
+    - `com.github.lamba92:kotlinx-document-store-rocksdb:1.0.0-SNAPSHOT`
   - :x: watchOs
   - :x: tvOs
   - :x: Linux
