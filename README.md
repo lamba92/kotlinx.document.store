@@ -120,7 +120,7 @@ dependecyResolutionManagement {
         maven("https://packages.jetbrains.team/maven/p/kpm/public")
     }
     versionCatalogs {
-        create("kotlinx-document-store") { // you can name it as you like, it will change the name of the variable
+        create("kotlinxDocumentStore") { // you can name it as you like, it will change the name of the variable
             from("com.github.lamba92:kotlinx-document-store-version-catalog:1.0.0-SNAPSHOT")
         }
     }
