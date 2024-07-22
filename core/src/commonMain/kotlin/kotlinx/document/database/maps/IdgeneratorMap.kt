@@ -50,5 +50,7 @@ public class IdGenerator(private val delegate: PersistentMap<String, String>) : 
             defaultValue = { defaultValue().toString() },
         ).toLong()
 
-    override fun entries(): Flow<Map.Entry<String, Long>> = delegate.entries().map { SerializableEntry(it.key, it.value.toLong()) }
+    override fun entries(fromIndex: Long): Flow<Map.Entry<String, Long>> =
+        delegate.entries(fromIndex)
+            .map { SerializableEntry(it.key, it.value.toLong()) }
 }

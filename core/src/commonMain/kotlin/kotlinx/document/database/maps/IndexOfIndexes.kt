@@ -56,5 +56,7 @@ public class IndexOfIndexes(private val delegate: PersistentMap<String, String>)
             defaultValue = { defaultValue().join() },
         ).split()
 
-    override fun entries(): Flow<Map.Entry<String, List<String>>> = delegate.entries().map { SerializableEntry(it.key, it.value.split()) }
+    override fun entries(fromIndex: Long): Flow<Map.Entry<String, List<String>>> =
+        delegate.entries(fromIndex)
+            .map { SerializableEntry(it.key, it.value.split()) }
 }

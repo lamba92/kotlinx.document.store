@@ -38,7 +38,9 @@ public class Index(private val delegate: PersistentMap<String, String>) : Persis
 
     override suspend fun isEmpty(): Boolean = delegate.isEmpty()
 
-    override fun entries(): Flow<Map.Entry<String?, Set<Long>>> = delegate.entries().map { SerializableEntry(it.key, it.value.split()) }
+    override fun entries(fromIndex: Long): Flow<Map.Entry<String?, Set<Long>>> =
+        delegate.entries(fromIndex)
+            .map { SerializableEntry(it.key, it.value.split()) }
 
     override fun close() {
         delegate.close()

@@ -50,7 +50,7 @@ public class Collection(private val delegate: PersistentMap<String, String>) : P
             defaultValue = { defaultValue() },
         )
 
-    override fun entries(): Flow<Map.Entry<Long, String>> =
-        delegate.entries()
+    override fun entries(fromIndex: Long): Flow<Map.Entry<Long, String>> =
+        delegate.entries(fromIndex)
             .map { SerializableEntry(it.key.toLong(), it.value) }
 }

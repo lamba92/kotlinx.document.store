@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 local.properties
 secret.txt
+server.db/
 
 ### IntelliJ IDEA ###
 .idea/

@@ -1,5 +1,5 @@
 import java.nio.file.Path
-import org.gradle.api.file.RegularFile
+import org.gradle.api.file.FileSystemLocation
 
-val RegularFile.asPath: Path
+val FileSystemLocation.asPath: Path
     get() = asFile.toPath()

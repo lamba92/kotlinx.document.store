@@ -1,7 +1,14 @@
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.createDirectories
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     application
+}
+
+application {
+    mainClass = "kotlinx.document.database.samples.ktor.server.MainKt"
 }
 
 dependencies {
@@ -11,4 +18,15 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    runtimeOnly(libs.logback.classic)
+}
+
+tasks {
+    named<JavaExec>("run") {
+        val dbPath = layout.buildDirectory.dir("db").get().asPath
+        environment("DB_PATH", dbPath.absolutePathString())
+        doFirst {
+            dbPath.createDirectories()
+        }
+    }
 }

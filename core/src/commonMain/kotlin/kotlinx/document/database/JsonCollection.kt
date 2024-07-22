@@ -43,9 +43,9 @@ public class JsonCollection(
 
     private suspend fun hasIndex(field: String) = indexMap.get(name)?.contains(field) ?: false
 
-    public fun iterateAll(): Flow<JsonObject> =
+    public fun iterateAll(fromIndex: Long = 0L): Flow<JsonObject> =
         collection
-            .entries()
+            .entries(fromIndex)
             .map { json.parseToJsonElement(it.value).jsonObject }
 
     override suspend fun createIndex(selector: String): Unit =

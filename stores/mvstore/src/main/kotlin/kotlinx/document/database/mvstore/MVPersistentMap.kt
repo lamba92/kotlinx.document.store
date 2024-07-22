@@ -9,6 +9,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.document.database.PersistentMap
 import kotlinx.document.database.UpdateResult
+import kotlinx.document.database.drop
 import org.h2.mvstore.MVMap
 
 public class MVPersistentMap<K, V>(
@@ -31,9 +32,10 @@ public class MVPersistentMap<K, V>(
 
     override suspend fun isEmpty(): Boolean = withContext(Dispatchers.IO) { delegate.isEmpty() }
 
-    override fun entries(): Flow<Map.Entry<K, V>> =
+    override fun entries(fromIndex: Long): Flow<Map.Entry<K, V>> =
         delegate.entries
             .asFlow()
+            .drop(fromIndex)
             .flowOn(Dispatchers.IO)
 
     private val mutex = Mutex()

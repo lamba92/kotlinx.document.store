@@ -2,6 +2,8 @@ package kotlinx.document.database.browser
 
 import kotlinx.coroutines.await
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -9,6 +11,7 @@ import kotlinx.document.database.DataStore
 import kotlinx.document.database.PersistentMap
 import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
+import kotlinx.document.database.drop
 
 object IndexedDBStore : DataStore {
     override suspend fun getMap(name: String): PersistentMap<String, String> = IndexedDBMap(name)
@@ -83,12 +86,14 @@ class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {
             get(key) ?: defaultValue().also { unsafePut(key, it) }
         }
 
-    override fun entries(): Flow<Map.Entry<String, String>> =
+    override fun entries(fromIndex: Long): Flow<Map.Entry<String, String>> =
         flow {
             keyval.keys()
                 .await()
+                .asFlow()
                 .filter { it.startsWith("${prefix}_") }
-                .forEach { key ->
+                .drop(fromIndex)
+                .collect { key ->
                     keyval.get(key).await()?.let { value ->
                         emit(SerializableEntry(key.removePrefix("${prefix}_"), value))
                     }

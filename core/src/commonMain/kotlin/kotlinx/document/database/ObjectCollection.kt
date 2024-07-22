@@ -43,8 +43,8 @@ public class ObjectCollection<T : Any>(
         jsonCollection.findById(id)
             ?.let { json.decodeFromJsonElement(serializer, it) }
 
-    public fun iterateAll(): Flow<T> =
-        jsonCollection.iterateAll()
+    public fun iterateAll(fromIndex: Long = 0L): Flow<T> =
+        jsonCollection.iterateAll(fromIndex)
             .map { json.decodeFromJsonElement(serializer, it) }
 
     public suspend fun updateById(

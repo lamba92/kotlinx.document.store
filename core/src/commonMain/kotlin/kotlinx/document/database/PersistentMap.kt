@@ -31,7 +31,7 @@ public interface PersistentMap<K, V> : AutoCloseable {
         defaultValue: () -> V,
     ): V
 
-    public fun entries(): Flow<Map.Entry<K, V>>
+    public fun entries(fromIndex: Long = 0L): Flow<Map.Entry<K, V>>
 
     override fun close() {
     }

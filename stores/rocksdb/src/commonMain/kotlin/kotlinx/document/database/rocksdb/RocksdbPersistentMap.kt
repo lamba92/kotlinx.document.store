@@ -74,11 +74,18 @@ public class RocksdbPersistentMap(
 
     override suspend fun isEmpty(): Boolean = size() == 0L
 
-    override fun entries(): Flow<Map.Entry<String, String>> =
+    override fun entries(fromIndex: Long): Flow<Map.Entry<String, String>> =
         flow {
             delegate.newIterator().use {
                 it.seek("${prefix}_".encodeToByteArray())
+                var dropped = 0L
                 while (it.isValid()) {
+                    // check if we need to skip some entries
+                    if (dropped++ < fromIndex) {
+                        it.next()
+                        continue
+                    }
+
                     val key = it.key().decodeToString()
                     when {
                         key.startsWith(prefix) ->
