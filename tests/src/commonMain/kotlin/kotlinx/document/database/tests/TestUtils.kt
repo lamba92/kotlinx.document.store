@@ -2,6 +2,7 @@ package kotlinx.document.database.tests
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.days
 
@@ -12,6 +13,7 @@ data class TestUser(
     val isAdult: Boolean = true,
     val birthDate: Instant = if (isAdult) Clock.System.now() - (365 * 20).days else Clock.System.now(),
     val addresses: List<Address>? = null,
+    @SerialName("_id") val id: Long? = null,
 ) {
     companion object {
         val Mario = TestUser("mario", 20)

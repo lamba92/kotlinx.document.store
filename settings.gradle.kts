@@ -21,6 +21,9 @@ include(
     ":stores:browser",
     ":stores:rocksdb",
     ":version-catalog",
+    ":samples:js-http-client",
+    ":samples:ktor-server",
+    ":samples:kmp-app",
 )
 
 gradleEnterprise {

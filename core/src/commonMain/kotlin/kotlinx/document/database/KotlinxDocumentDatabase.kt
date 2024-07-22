@@ -55,17 +55,18 @@ public class KotlinxDocumentDatabase internal constructor(
             .entries()
             .map { it.key }
 
-    public suspend fun databaseDetails(): List<CollectionDetails> =
+    public suspend fun databaseDetails(): Map<String, CollectionDetails> =
         store.getMap(COLLECTIONS)
             .entries()
-            .map { getJsonCollection(it.key).details() }
+            .map { it.key to getJsonCollection(it.key).details() }
             .toList()
+            .toMap()
 }
 
 @Serializable
 public data class CollectionDetails(
     val idGeneratorState: Long,
-    val indexes: List<Map<String?, Set<Long>>>,
+    val indexes: Map<String, Map<String?, Set<Long>>>,
 )
 
 @JvmName("toMapEntry")

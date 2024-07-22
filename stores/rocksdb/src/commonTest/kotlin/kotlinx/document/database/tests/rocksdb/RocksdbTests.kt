@@ -8,6 +8,7 @@ import kotlinx.document.database.tests.AbstractDocumentDatabaseTests
 import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
+import kotlinx.document.database.tests.AbstractUpdateTests
 import kotlinx.document.database.tests.DatabaseDeleter
 import kotlinx.io.files.Path
 
@@ -25,6 +26,10 @@ class RocksdbIndexTests :
 
 class RocksdbInsertTests :
     AbstractInsertTests(RocksdbDataStore.open(DB_PATH)),
+    DatabaseDeleter by RocksdbDeleter
+
+class RocksdbUpdateTests :
+    AbstractUpdateTests(RocksdbDataStore.open(DB_PATH)),
     DatabaseDeleter by RocksdbDeleter
 
 class RocksdbObjectCollectionTests :

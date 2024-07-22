@@ -1,6 +1,7 @@
 package kotlinx.document.database
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 public interface KotlinxDatabaseCollection {
     public suspend fun size(): Long
@@ -9,8 +10,6 @@ public interface KotlinxDatabaseCollection {
     public val json: Json
 
     public suspend fun createIndex(selector: String)
-
-    public suspend fun removeById(id: Long)
 
     public suspend fun dropIndex(selector: String)
 
@@ -21,4 +20,9 @@ public interface KotlinxDatabaseCollection {
     public suspend fun clear()
 
     public suspend fun details(): CollectionDetails
+
+    public suspend fun removeWhere(
+        fieldSelector: String,
+        fieldValue: JsonPrimitive,
+    )
 }

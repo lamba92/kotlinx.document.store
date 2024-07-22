@@ -9,6 +9,7 @@ import kotlinx.document.database.tests.AbstractDocumentDatabaseTests
 import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
+import kotlinx.document.database.tests.AbstractUpdateTests
 import kotlinx.document.database.tests.DatabaseDeleter
 
 class BrowserDeleteTests :
@@ -25,6 +26,10 @@ class BrowserIndexTests :
 
 class BrowserInsertTests :
     AbstractInsertTests(IndexedDBStore),
+    DatabaseDeleter by BrowserDeleter
+
+class BrowserUpdateTests :
+    AbstractUpdateTests(IndexedDBStore),
     DatabaseDeleter by BrowserDeleter
 
 class BrowserObjectCollectionTests :

@@ -17,7 +17,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.core)
+                api(projects.core)
                 api(libs.rocksdb.multiplatform)
                 api(libs.kotlinx.io.core)
             }

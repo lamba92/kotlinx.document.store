@@ -86,7 +86,7 @@ public fun JsonObject.select(query: List<String>): JsonObjectSelectionResult {
 
     return when (currentElement) {
         JsonNull -> JsonObjectSelectionResult.Null
-        is JsonPrimitive -> JsonObjectSelectionResult.Found(currentElement.content)
+        is JsonPrimitive -> JsonObjectSelectionResult.Found(currentElement)
         else -> JsonObjectSelectionResult.NotFound
     }
 }
@@ -114,7 +114,7 @@ public sealed interface JsonObjectSelectionResult {
      * `Found` represents a successful retrieval of a value from the JSON object.
      * The `value` property contains the retrieved value as a string.
      */
-    public data class Found(val value: String) : JsonObjectSelectionResult
+    public data class Found(val value: JsonPrimitive) : JsonObjectSelectionResult
 
     /**
      * `NotFound` represents an unsuccessful retrieval attempt from the `JsonObject`,

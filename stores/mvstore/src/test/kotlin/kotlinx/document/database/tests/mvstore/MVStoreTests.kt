@@ -10,6 +10,7 @@ import kotlinx.document.database.tests.AbstractDocumentDatabaseTests
 import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
+import kotlinx.document.database.tests.AbstractUpdateTests
 import kotlinx.document.database.tests.DatabaseDeleter
 import kotlin.io.path.Path
 import kotlin.io.path.deleteIfExists
@@ -28,6 +29,10 @@ class MVStoreIndexTests :
 
 class MVStoreInsertTests :
     AbstractInsertTests(MVDataStore.open(DB_PATH)),
+    DatabaseDeleter by MVStoreDeleter
+
+class MVStoreUpdateTests :
+    AbstractUpdateTests(MVDataStore.open(DB_PATH)),
     DatabaseDeleter by MVStoreDeleter
 
 class MVStoreObjectCollectionTests :
