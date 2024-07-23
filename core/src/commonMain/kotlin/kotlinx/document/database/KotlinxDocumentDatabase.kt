@@ -1,6 +1,5 @@
 package kotlinx.document.database
 
-import kotlin.jvm.JvmName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -16,6 +15,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
+import kotlin.jvm.JvmName
 
 public class KotlinxDocumentDatabase internal constructor(
     private val store: DataStore,

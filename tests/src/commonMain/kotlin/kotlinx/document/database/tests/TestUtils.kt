@@ -1,10 +1,10 @@
 package kotlinx.document.database.tests
 
-import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class TestUser(

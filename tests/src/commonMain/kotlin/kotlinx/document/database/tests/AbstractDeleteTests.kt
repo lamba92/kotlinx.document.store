@@ -2,13 +2,13 @@
 
 package kotlinx.document.database.tests
 
-import kotlin.js.JsName
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.count
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.getObjectCollection
 import kotlinx.serialization.json.JsonPrimitive
+import kotlin.js.JsName
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 abstract class AbstractDeleteTests(store: DataStore) : BaseTest(store) {
     @Test
