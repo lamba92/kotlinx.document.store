@@ -9,16 +9,19 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.serializer
 
 public class ObjectCollection<T : Any>(
     private val serializer: KSerializer<T>,
     public val jsonCollection: JsonCollection,
 ) : KotlinxDatabaseCollection by jsonCollection {
-    public suspend fun find(
+
+    public suspend fun <K> find(
         selector: String,
-        value: JsonPrimitive,
+        value: K,
+        valueSerializer: KSerializer<K>
     ): Flow<T> =
-        jsonCollection.find(selector, value)
+        jsonCollection.find(selector, json.encodeToJsonElement(valueSerializer, value))
             .map { json.decodeFromJsonElement(serializer, it) }
 
     public suspend fun insert(value: T): T {
@@ -83,3 +86,8 @@ public class ObjectCollection<T : Any>(
             update = json.encodeToJsonElement(serializer, update).jsonObject,
         )
 }
+
+public suspend inline fun <reified K, T : Any> ObjectCollection<T>.find(
+    selector: String,
+    value: K,
+): Flow<T> = find(selector, value, json.serializersModule.serializer<K>())
