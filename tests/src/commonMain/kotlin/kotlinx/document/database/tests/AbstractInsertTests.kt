@@ -5,8 +5,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.document.database.DataStore
+import kotlinx.document.database.find
 import kotlinx.document.database.getObjectCollection
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.encodeToJsonElement
 
 abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
     @Test
@@ -36,18 +38,13 @@ abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
         runDatabaseTest {
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
-            val testUser =
-                TestUser(
-                    name = "mario",
-                    age = 20,
-                    addresses = listOf(Address("street", 1)),
-                )
 
-            val expected = collection.insert(testUser)
+            val expected = collection.insert(TestUser.Mario)
+            val expectedId = expected.id ?: error("Id should not be null")
 
             assertEquals(
                 expected = expected,
-                actual = collection.iterateAll().first(),
+                actual = collection.findById(expectedId),
                 message = "Collection should have 1 element",
             )
 
@@ -57,6 +54,38 @@ abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
                         .indexes
                         .getValue("name")
                         .getValue(JsonPrimitive(expected.name)),
+                actual = setOf(expectedId),
+                message = "Index should be the one of Mario",
+            )
+        }
+
+    @Test
+    @JsName("inserts_and_retrieves_a_document_using_complex_index")
+    fun `inserts and retrieves a document using complex index`() =
+        runDatabaseTest {
+            val collection = db.getObjectCollection<TestUser>("test")
+            collection.createIndex("addresses.$0")
+
+            val expected = collection.insert(TestUser.Mario)
+
+            val actual =
+                collection.find(
+                    selector = "addresses.$0",
+                    value = expected.addresses[0],
+                ).first()
+
+            assertEquals(
+                expected = expected,
+                actual = actual,
+                message = "Collection should have 1 element",
+            )
+
+            assertEquals(
+                expected =
+                    collection.details()
+                        .indexes
+                        .getValue("addresses.$0")
+                        .getValue(collection.json.encodeToJsonElement(expected.addresses[0])),
                 actual = setOf(expected.id),
                 message = "Index should be the one of Mario",
             )

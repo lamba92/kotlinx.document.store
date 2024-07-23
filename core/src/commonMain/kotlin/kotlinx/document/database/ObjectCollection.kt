@@ -15,11 +15,10 @@ public class ObjectCollection<T : Any>(
     private val serializer: KSerializer<T>,
     public val jsonCollection: JsonCollection,
 ) : KotlinxDatabaseCollection by jsonCollection {
-
     public suspend fun <K> find(
         selector: String,
         value: K,
-        valueSerializer: KSerializer<K>
+        valueSerializer: KSerializer<K>,
     ): Flow<T> =
         jsonCollection.find(selector, json.encodeToJsonElement(valueSerializer, value))
             .map { json.decodeFromJsonElement(serializer, it) }

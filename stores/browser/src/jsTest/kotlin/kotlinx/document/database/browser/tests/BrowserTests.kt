@@ -6,6 +6,7 @@ import kotlinx.coroutines.await
 import kotlinx.document.database.browser.IndexedDBStore
 import kotlinx.document.database.tests.AbstractDeleteTests
 import kotlinx.document.database.tests.AbstractDocumentDatabaseTests
+import kotlinx.document.database.tests.AbstractFindTests
 import kotlinx.document.database.tests.AbstractIndexTests
 import kotlinx.document.database.tests.AbstractInsertTests
 import kotlinx.document.database.tests.AbstractObjectCollectionTests
@@ -30,6 +31,10 @@ class BrowserInsertTests :
 
 class BrowserUpdateTests :
     AbstractUpdateTests(IndexedDBStore),
+    DatabaseDeleter by BrowserDeleter
+
+class BrowserFindTests :
+    AbstractFindTests(IndexedDBStore),
     DatabaseDeleter by BrowserDeleter
 
 class BrowserObjectCollectionTests :

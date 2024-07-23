@@ -18,12 +18,12 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.document.database.ObjectCollection
+import kotlinx.document.database.find
 import kotlinx.document.database.samples.Page
 import kotlinx.document.database.samples.User
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
@@ -85,7 +85,7 @@ fun Application.UserCRUDServer(userCollection: ObjectCollection<User>) {
                     call.respond(HttpStatusCode.BadRequest)
                     return@get
                 }
-                val users = userCollection.find("name", JsonPrimitive(name))
+                val users = userCollection.find("name", name)
                 call.respond(users)
             }
             get("insertTestUsers") {
