@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.document.database.KotlinxDocumentDatabase
 import kotlinx.document.database.getObjectCollection
 import kotlinx.document.database.rocksdb.RocksdbDataStore
+import kotlinx.document.database.samples.User
 
 suspend fun main(): Unit = coroutineScope {
     val path = System.getenv("DB_PATH")

@@ -18,10 +18,15 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.document.database.ObjectCollection
+import kotlinx.document.database.samples.Page
+import kotlinx.document.database.samples.User
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 
 @Suppress("FunctionName")
 fun Application.UserCRUDServer(userCollection: ObjectCollection<User>) {
@@ -44,7 +49,7 @@ fun Application.UserCRUDServer(userCollection: ObjectCollection<User>) {
                     .take(pageSize)
                     .toList()
 
-                call.respond(Page(users, page, pageSize, totalElements, totalPages))
+                call.respond(Page(users, page, pageSize, totalElements.toInt(), totalPages.toInt()))
             }
             get("{id}") {
                 val id = call.parameters["id"]?.toLongOrNull()
@@ -65,12 +70,13 @@ fun Application.UserCRUDServer(userCollection: ObjectCollection<User>) {
                 call.respond(status = HttpStatusCode.Created, user)
             }
             post {
-                val user = call.receive<User>()
-                if (user.id == null) {
+                val user = call.receive<JsonObject>()
+                val id = user["id"]?.jsonPrimitive?.longOrNull
+                if (id == null) {
                     call.respond(HttpStatusCode.BadRequest)
                     return@post
                 }
-                userCollection.updateById(user.id) { user }
+                userCollection.jsonCollection.updateById(id) { user }
                 call.respond(HttpStatusCode.OK)
             }
             get("search") {

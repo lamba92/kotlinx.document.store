@@ -7,6 +7,8 @@ import kotlinx.document.database.SerializableEntry
 import kotlinx.document.database.UpdateResult
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
 private fun String.split() = Json.decodeFromString<Set<Long>>(this)
 
@@ -14,23 +16,35 @@ private fun Set<Long>.join() = Json.encodeToString(this)
 
 public fun PersistentMap<String, String>.asIndex(): Index = Index(this)
 
-public class Index(private val delegate: PersistentMap<String, String>) : PersistentMap<String?, Set<Long>> {
+public class Index(
+    private val delegate: PersistentMap<String, String>,
+) : PersistentMap<JsonElement, Set<Long>> {
     public companion object {
-        public const val NULL_MARKER: String = "%%%null%%%"
+        private val json =
+            Json {
+                encodeDefaults = false
+                prettyPrint = false
+            }
+
+        private fun JsonElement.asString(): String =
+            when (this) {
+                is JsonPrimitive -> toString()
+                else -> json.encodeToString(this)
+            }
     }
 
-    override suspend fun get(key: String?): Set<Long>? = delegate.get(key ?: NULL_MARKER)?.split()
+    override suspend fun get(key: JsonElement): Set<Long>? = delegate.get(key.asString())?.split()
 
     override suspend fun put(
-        key: String?,
+        key: JsonElement,
         value: Set<Long>,
     ): Set<Long>? =
-        delegate.put(key ?: NULL_MARKER, value.join())
+        delegate.put(key.asString(), value.join())
             ?.split()
 
-    override suspend fun remove(key: String?): Set<Long>? = delegate.remove(key ?: NULL_MARKER)?.split()
+    override suspend fun remove(key: JsonElement): Set<Long>? = delegate.remove(key.asString())?.split()
 
-    override suspend fun containsKey(key: String?): Boolean = delegate.containsKey(key ?: NULL_MARKER)
+    override suspend fun containsKey(key: JsonElement): Boolean = delegate.containsKey(key.asString())
 
     override suspend fun clear(): Unit = delegate.clear()
 
@@ -38,30 +52,30 @@ public class Index(private val delegate: PersistentMap<String, String>) : Persis
 
     override suspend fun isEmpty(): Boolean = delegate.isEmpty()
 
-    override fun entries(fromIndex: Long): Flow<Map.Entry<String?, Set<Long>>> =
+    override fun entries(fromIndex: Long): Flow<Map.Entry<JsonElement, Set<Long>>> =
         delegate.entries(fromIndex)
-            .map { SerializableEntry(it.key, it.value.split()) }
+            .map { SerializableEntry(json.decodeFromString(it.key), it.value.split()) }
 
     override fun close() {
         delegate.close()
     }
 
     override suspend fun getOrPut(
-        key: String?,
+        key: JsonElement,
         defaultValue: () -> Set<Long>,
     ): Set<Long> =
         delegate.getOrPut(
-            key = key ?: NULL_MARKER,
+            key = key.asString(),
             defaultValue = { defaultValue().join() },
         ).split()
 
     override suspend fun update(
-        key: String?,
+        key: JsonElement,
         value: Set<Long>,
         updater: (Set<Long>) -> Set<Long>,
     ): UpdateResult<Set<Long>> =
         delegate.update(
-            key = key ?: NULL_MARKER,
+            key = key.asString(),
             value = value.join(),
             updater = { updater(it.split()).join() },
         ).let { UpdateResult(it.oldValue?.split(), it.newValue.split()) }

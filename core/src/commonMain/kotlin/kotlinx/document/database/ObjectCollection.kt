@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -60,7 +61,7 @@ public class ObjectCollection<T : Any>(
 
     public suspend fun updateWhere(
         filedSelector: String,
-        fieldValue: JsonPrimitive,
+        fieldValue: JsonElement,
         update: suspend (T) -> T,
     ): Boolean =
         jsonCollection.updateWhere(filedSelector, fieldValue) {

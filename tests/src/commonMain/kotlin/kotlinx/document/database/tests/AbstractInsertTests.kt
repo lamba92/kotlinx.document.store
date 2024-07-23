@@ -1,11 +1,12 @@
 package kotlinx.document.database.tests
 
-import kotlinx.coroutines.flow.first
-import kotlinx.document.database.DataStore
-import kotlinx.document.database.getObjectCollection
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.first
+import kotlinx.document.database.DataStore
+import kotlinx.document.database.getObjectCollection
+import kotlinx.serialization.json.JsonPrimitive
 
 abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
     @Test
@@ -55,7 +56,7 @@ abstract class AbstractInsertTests(store: DataStore) : BaseTest(store) {
                     collection.details()
                         .indexes
                         .getValue("name")
-                        .getValue("mario"),
+                        .getValue(JsonPrimitive(expected.name)),
                 actual = setOf(expected.id),
                 message = "Index should be the one of Mario",
             )
