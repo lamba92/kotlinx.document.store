@@ -7,7 +7,7 @@ kotlin {
 
     jvm()
 
-    if (System.getenv("CI") != "true") {
+    if (System.getenv("ENABLE_ROCKSDB_NATIVE") == "true") {
         macosArm64()
         macosX64()
         iosArm64()
