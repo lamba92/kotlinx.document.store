@@ -62,11 +62,11 @@ public class ObjectCollection<T : Any>(
     }
 
     public suspend fun updateWhere(
-        filedSelector: String,
+        fieldSelector: String,
         fieldValue: JsonElement,
         update: suspend (T) -> T,
     ): Boolean =
-        jsonCollection.updateWhere(filedSelector, fieldValue) {
+        jsonCollection.updateWhere(fieldSelector, fieldValue) {
             val decodeFromJsonElement = json.decodeFromJsonElement(serializer, it)
             val newItem = update(decodeFromJsonElement)
             json.encodeToJsonElement(serializer, newItem).jsonObject
@@ -74,7 +74,7 @@ public class ObjectCollection<T : Any>(
 
     public suspend fun updateWhere(
         fieldSelector: String,
-        fieldValue: JsonPrimitive,
+        fieldValue: JsonElement,
         upsert: Boolean,
         update: T,
     ): Boolean =
@@ -90,3 +90,35 @@ public suspend inline fun <reified K, T : Any> ObjectCollection<T>.find(
     selector: String,
     value: K,
 ): Flow<T> = find(selector, value, json.serializersModule.serializer<K>())
+
+public suspend inline fun <reified K, T : Any> ObjectCollection<T>.updateWhere(
+    fieldSelector: String,
+    fieldValue: K,
+    upsert: Boolean,
+    update: T,
+): Boolean =
+    updateWhere(
+        fieldSelector = fieldSelector,
+        fieldValue =
+            json.encodeToJsonElement(
+                serializer = json.serializersModule.serializer<K>(),
+                value = fieldValue,
+            ),
+        upsert = upsert,
+        update = update,
+    )
+
+public suspend inline fun <reified K, T : Any> ObjectCollection<T>.updateWhere(
+    fieldSelector: String,
+    fieldValue: K,
+    noinline update: suspend (T) -> T,
+): Boolean =
+    updateWhere(
+        fieldSelector = fieldSelector,
+        fieldValue =
+            json.encodeToJsonElement(
+                serializer = json.serializersModule.serializer<K>(),
+                value = fieldValue,
+            ),
+        update = update,
+    )

@@ -17,10 +17,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.serializer
 
 public class JsonCollection(
     override val name: String,
@@ -214,7 +214,7 @@ public class JsonCollection(
 
     public suspend fun updateWhere(
         fieldSelector: String,
-        fieldValue: JsonPrimitive,
+        fieldValue: JsonElement,
         upsert: Boolean,
         update: JsonObject,
     ): Boolean =
@@ -247,6 +247,51 @@ public class JsonCollection(
                 .collect { removeByIdUnsafe(it) }
         }
 }
+
+public suspend inline fun <reified K> JsonCollection.updateWhere(
+    fieldSelector: String,
+    fieldValue: K,
+    noinline update: suspend (JsonObject) -> JsonObject,
+): Boolean =
+    updateWhere(
+        fieldSelector = fieldSelector,
+        fieldValue =
+            json.encodeToJsonElement(
+                serializer = json.serializersModule.serializer<K>(),
+                value = fieldValue,
+            ),
+        update = update,
+    )
+
+public suspend inline fun <reified K> JsonCollection.updateWhere(
+    fieldSelector: String,
+    fieldValue: K,
+    upsert: Boolean,
+    update: JsonObject,
+): Boolean =
+    updateWhere(
+        fieldSelector = fieldSelector,
+        fieldValue =
+            json.encodeToJsonElement(
+                serializer = json.serializersModule.serializer<K>(),
+                value = fieldValue,
+            ),
+        upsert = upsert,
+        update = update,
+    )
+
+public suspend inline fun <reified K> KotlinxDatabaseCollection.removeWhere(
+    fieldSelector: String,
+    fieldValue: K,
+): Unit =
+    removeWhere(
+        fieldSelector = fieldSelector,
+        fieldValue =
+            json.encodeToJsonElement(
+                serializer = json.serializersModule.serializer<K>(),
+                value = fieldValue,
+            ),
+    )
 
 private fun <K, V> Iterable<Map.Entry<K, V>>.toMap() = buildMap { this@toMap.forEach { put(it.key, it.value) } }
 
