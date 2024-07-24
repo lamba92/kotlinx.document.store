@@ -3,6 +3,7 @@ package kotlinx.document.database.tests
 import kotlinx.coroutines.flow.single
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.getObjectCollection
+import kotlinx.document.database.updateWhere
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -65,7 +66,7 @@ abstract class AbstractUpdateTests(store: DataStore) : BaseTest(store) {
 
             collection.updateWhere(
                 fieldSelector = "name",
-                fieldValue = JsonPrimitive(TestUser.Mario.name),
+                fieldValue = TestUser.Mario.name,
                 upsert = true,
                 update = TestUser.Mario,
             )
@@ -89,7 +90,7 @@ abstract class AbstractUpdateTests(store: DataStore) : BaseTest(store) {
             val result =
                 collection.updateWhere(
                     fieldSelector = "name",
-                    fieldValue = JsonPrimitive(TestUser.Mario.name),
+                    fieldValue = TestUser.Mario.name,
                     upsert = true,
                     update = TestUser.Mario,
                 )

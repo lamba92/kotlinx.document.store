@@ -5,7 +5,9 @@ package kotlinx.document.database.tests
 import kotlinx.coroutines.flow.count
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.getObjectCollection
+import kotlinx.document.database.removeWhere
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -82,7 +84,7 @@ abstract class AbstractDeleteTests(store: DataStore) : BaseTest(store) {
             collection.insert(TestUser.Mario)
             collection.removeWhere(
                 fieldSelector = "name",
-                fieldValue = JsonPrimitive(TestUser.Mario.name),
+                fieldValue = TestUser.Mario.name,
             )
             assertEquals(
                 expected = 0,
@@ -100,7 +102,7 @@ abstract class AbstractDeleteTests(store: DataStore) : BaseTest(store) {
             collection.insert(TestUser.Mario)
             collection.removeWhere(
                 fieldSelector = "name",
-                fieldValue = JsonPrimitive(TestUser.Mario.name),
+                fieldValue = TestUser.Mario.name,
             )
             assertEquals(
                 expected = 0,
@@ -114,6 +116,50 @@ abstract class AbstractDeleteTests(store: DataStore) : BaseTest(store) {
                         .indexes
                         .getValue("name")
                         .getValue(JsonPrimitive(TestUser.Mario.name)),
+                message = "Index should be empty",
+            )
+        }
+
+    @Test
+    @JsName("deletes_a_document_using_complex_selector")
+    fun `deletes a document using complex selector`() =
+        runDatabaseTest {
+            val collection = db.getObjectCollection<TestUser>("test")
+            collection.insert(TestUser.Mario)
+            collection.removeWhere(
+                fieldSelector = "addresses.$0",
+                fieldValue = TestUser.Mario.addresses.first(),
+            )
+            assertEquals(
+                expected = 0,
+                actual = collection.iterateAll().count(),
+                message = "Collection should have 0 elements",
+            )
+        }
+
+    @Test
+    @JsName("deletes_a_document_using_complex_selector_with_index")
+    fun `deletes a document using complex selector with index`() =
+        runDatabaseTest {
+            val collection = db.getObjectCollection<TestUser>("test")
+            collection.createIndex("addresses.$0")
+            collection.insert(TestUser.Mario)
+            collection.removeWhere(
+                fieldSelector = "addresses.$0",
+                fieldValue = TestUser.Mario.addresses.first(),
+            )
+            assertEquals(
+                expected = 0,
+                actual = collection.iterateAll().count(),
+                message = "Collection should have 0 elements",
+            )
+            assertEquals(
+                expected = emptySet(),
+                actual =
+                    collection.details()
+                        .indexes
+                        .getValue("addresses.$0")
+                        .getValue(collection.json.encodeToJsonElement(TestUser.Mario.addresses.first())),
                 message = "Index should be empty",
             )
         }
