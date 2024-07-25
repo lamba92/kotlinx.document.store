@@ -179,7 +179,7 @@ public class JsonCollection(
     ): Boolean {
         val item = collection.get(id) ?: return false
         val jsonObject = json.decodeFromString<JsonObject>(item)
-        val newItem = update(jsonObject) ?: return false
+        val newItem = update(jsonObject)?.copy(id) ?: return false
         insertUnsafe(newItem)
         return true
     }
@@ -224,7 +224,7 @@ public class JsonCollection(
                 insertUnsafe(update)
                 return true
             }
-            return false
+            updated
         }
 
     override suspend fun removeWhere(
