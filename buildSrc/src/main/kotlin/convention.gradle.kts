@@ -31,7 +31,7 @@ plugins.withId("org.jetbrains.kotlin.jvm") {
     extensions.getByName<KotlinJvmProjectExtension>("kotlin").apply {
         sourceSets.silenceOptIns()
         explicitApi()
-
+        jvmToolchain(17)
         val sourcesJar by tasks.registering(Jar::class) {
             archiveClassifier = "sources"
             from(sourceSets["main"].kotlin)
@@ -52,6 +52,7 @@ plugins.withId("org.jetbrains.kotlin.jvm") {
 plugins.withId("org.jetbrains.kotlin.multiplatform") {
     extensions.getByName<KotlinMultiplatformExtension>("kotlin").apply {
         sourceSets.silenceOptIns()
+        jvmToolchain(17)
         explicitApi()
         publishing {
             publications.withType<MavenPublication> {
