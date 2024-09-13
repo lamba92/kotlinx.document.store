@@ -1,7 +1,6 @@
 package kotlinx.document.database.rocksdb
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -30,7 +29,7 @@ public class RocksdbPersistentMap(
     override suspend fun put(
         key: String,
         value: String,
-    ): String? = mutex.withLock(this) { unsafePut(key, value) }
+    ): String? = mutex.withLock { unsafePut(key, value) }
 
     private suspend fun unsafePut(
         key: String,
@@ -44,7 +43,7 @@ public class RocksdbPersistentMap(
         }
 
     override suspend fun remove(key: String): String? =
-        mutex.withLock(this) {
+        mutex.withLock {
             withContext(Dispatchers.IO) {
                 val prefixed = key.prefixed()
                 val previous = delegate[prefixed]?.decodeToString()
@@ -58,7 +57,7 @@ public class RocksdbPersistentMap(
     override suspend fun clear(): Unit = delegate.deletePrefix(prefix)
 
     override suspend fun size(): Long =
-        mutex.withLock(this) {
+        mutex.withLock {
             var count = 0L
             withContext(Dispatchers.IO) {
                 delegate.newIterator().use {
@@ -107,7 +106,7 @@ public class RocksdbPersistentMap(
         key: String,
         defaultValue: () -> String,
     ): String =
-        mutex.withLock(this) {
+        mutex.withLock {
             withContext(Dispatchers.IO) {
                 delegate[key.prefixed()]?.decodeToString() ?: defaultValue().also { unsafePut(key, it) }
             }
@@ -118,7 +117,7 @@ public class RocksdbPersistentMap(
         value: String,
         updater: (String) -> String,
     ): UpdateResult<String> =
-        mutex.withLock(this) {
+        mutex.withLock {
             withContext(Dispatchers.IO) {
                 val previous = delegate[key.prefixed()]?.decodeToString()
                 val newValue = previous?.let(updater) ?: value
