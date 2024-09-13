@@ -1,6 +1,7 @@
 package kotlinx.document.database.tests
 
-import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.document.database.DataStore
 import kotlinx.document.database.KotlinxDocumentDatabase
@@ -15,11 +16,11 @@ abstract class BaseTest(store: DataStore) : DatabaseDeleter {
     protected fun runDatabaseTest(
         context: CoroutineContext = EmptyCoroutineContext,
         timeout: Duration = 60.seconds,
-        testBody: suspend TestScope.() -> Unit,
+        testBody: suspend CoroutineScope.() -> Unit,
     ) = runTest(context, timeout) {
         deleteDatabase()
         try {
-            testBody()
+            coroutineScope(testBody)
         } finally {
             db.close()
             deleteDatabase()

@@ -46,7 +46,7 @@ class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {
     override suspend fun put(
         key: String,
         value: String,
-    ) = mutex.withLock(this) { unsafePut(key, value) }
+    ) = mutex.withLock { unsafePut(key, value) }
 
     private suspend fun IndexedDBMap.unsafePut(
         key: String,
@@ -58,7 +58,7 @@ class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {
     }
 
     override suspend fun remove(key: String): String? =
-        mutex.withLock(this) {
+        mutex.withLock {
             val previous = get(key)
             keyval.del("${prefix}_$key").await()
             previous
@@ -71,7 +71,7 @@ class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {
         value: String,
         updater: (String) -> String,
     ): UpdateResult<String> =
-        mutex.withLock(this) {
+        mutex.withLock {
             val oldValue = get(key)
             val newValue = oldValue?.let(updater) ?: value
             keyval.set("${prefix}_$key", newValue).await()
@@ -82,7 +82,7 @@ class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {
         key: String,
         defaultValue: () -> String,
     ): String =
-        mutex.withLock(this) {
+        mutex.withLock {
             get(key) ?: defaultValue().also { unsafePut(key, it) }
         }
 

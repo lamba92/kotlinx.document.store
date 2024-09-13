@@ -97,7 +97,7 @@ public class JsonCollection(
         findUsingIndex(selector, value)
             ?: iterateAll().filter { it.select(selector) == value }
 
-    public suspend fun removeById(id: Long): JsonObject? = mutex.withLock(this) { removeByIdUnsafe(id) }
+    public suspend fun removeById(id: Long): JsonObject? = mutex.withLock { removeByIdUnsafe(id) }
 
     private suspend fun removeByIdUnsafe(id: Long): JsonObject? {
         val jsonString = collection.remove(id) ?: return null
@@ -116,7 +116,7 @@ public class JsonCollection(
         return jsonObject
     }
 
-    public suspend fun insert(value: JsonObject): JsonObject = mutex.withLock(this) { insertUnsafe(value) }
+    public suspend fun insert(value: JsonObject): JsonObject = mutex.withLock { insertUnsafe(value) }
 
     private suspend fun insertUnsafe(value: JsonObject): JsonObject {
         val id = value.id ?: generateId()
@@ -149,7 +149,7 @@ public class JsonCollection(
             ?.toMap()
 
     override suspend fun dropIndex(selector: String): Unit =
-        mutex.withLock(this) {
+        mutex.withLock {
             store.deleteMap("$name.$selector")
             indexMap.update(name, emptyList()) { it - selector }
         }
@@ -188,7 +188,7 @@ public class JsonCollection(
         fieldSelector: String,
         fieldValue: JsonElement,
         update: suspend (JsonObject) -> JsonObject,
-    ): Boolean = mutex.withLock(this) { updateWhereUnsafe(fieldSelector, fieldValue, update) }
+    ): Boolean = mutex.withLock { updateWhereUnsafe(fieldSelector, fieldValue, update) }
 
     private suspend fun JsonCollection.updateWhereUnsafe(
         fieldSelector: String,
@@ -218,7 +218,7 @@ public class JsonCollection(
         upsert: Boolean,
         update: JsonObject,
     ): Boolean =
-        mutex.withLock(this) {
+        mutex.withLock {
             val updated = updateWhereUnsafe(fieldSelector, fieldValue) { update }
             if (!updated && upsert) {
                 insertUnsafe(update)
@@ -231,7 +231,7 @@ public class JsonCollection(
         fieldSelector: String,
         fieldValue: JsonElement,
     ): Unit =
-        mutex.withLock(this) {
+        mutex.withLock {
             val ids =
                 getIndexInternal(fieldSelector)
                     ?.get(fieldValue)
