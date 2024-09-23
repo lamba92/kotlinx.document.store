@@ -17,7 +17,6 @@ abstract class BaseTest(store: DataStore) : DatabaseDeleter {
         timeout: Duration = 60.seconds,
         testBody: suspend TestScope.() -> Unit,
     ) = runTest(context, timeout) {
-        deleteDatabase()
         try {
             testBody()
         } finally {
