@@ -14,6 +14,8 @@ import kotlinx.document.database.UpdateResult
 import kotlinx.document.database.drop
 
 object IndexedDBStore : DataStore {
+    override val commitStrategy: DataStore.CommitStrategy = DataStore.CommitStrategy.OnChange
+
     override suspend fun getMap(name: String): PersistentMap<String, String> = IndexedDBMap(name)
 
     override suspend fun deleteMap(name: String) {
@@ -21,6 +23,10 @@ object IndexedDBStore : DataStore {
             .filter { it.startsWith(name) }
             .let { keyval.delMany(it.toTypedArray()).await() }
     }
+
+    override suspend fun close() {}
+
+    override suspend fun commit() {}
 }
 
 class IndexedDBMap(private val prefix: String) : PersistentMap<String, String> {

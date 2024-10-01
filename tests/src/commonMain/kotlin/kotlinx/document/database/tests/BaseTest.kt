@@ -18,7 +18,6 @@ abstract class BaseTest(store: DataStore) : DatabaseDeleter {
         timeout: Duration = 60.seconds,
         testBody: suspend CoroutineScope.() -> Unit,
     ) = runTest(context, timeout) {
-        deleteDatabase()
         try {
             coroutineScope(testBody)
         } finally {

@@ -38,6 +38,15 @@ data class TestUser(
                         Address("New York", 3),
                     ),
             )
+
+        fun generateUsers(count: Int): Sequence<TestUser> =
+            sequence {
+                var counter = 0
+                while (true) {
+                    yield(TestUser("user$counter", counter))
+                    counter++
+                }
+            }.take(count)
     }
 }
 

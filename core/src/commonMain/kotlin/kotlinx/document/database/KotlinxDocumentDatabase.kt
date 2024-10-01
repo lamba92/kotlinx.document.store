@@ -20,7 +20,7 @@ import kotlin.jvm.JvmName
 public class KotlinxDocumentDatabase internal constructor(
     private val store: DataStore,
     private val json: Json,
-) : AutoCloseable by store {
+) {
     public companion object {
         public const val ID_GEN_MAP_NAME: String = "id_gen"
         public const val ID_PROPERTY_NAME: String = "_id"
@@ -62,6 +62,10 @@ public class KotlinxDocumentDatabase internal constructor(
             .map { it.key to getJsonCollection(it.key).details() }
             .toList()
             .toMap()
+
+    public suspend fun close() {
+        store.close()
+    }
 }
 
 @Serializable
