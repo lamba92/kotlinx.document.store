@@ -49,7 +49,7 @@ class MVStoreObjectCollectionTests :
     DatabaseDeleter by MVStoreDeleter
 
 // todo flaky
-//class MVStorePeriodicCommitStrategyTests :
+// class MVStorePeriodicCommitStrategyTests :
 //    AbstractPeriodicCommitStrategyTests(
 //        MVDataStore.open(
 //            Path(DB_PATH),
@@ -60,7 +60,7 @@ class MVStoreObjectCollectionTests :
 //    override fun getUnsavedMemory() = (store as MVDataStore).delegate.unsavedMemory
 //
 //    override fun getTotalCacheMemorySize(): Int = (store as MVDataStore).delegate.autoCommitMemory
-//}
+// }
 
 class MVStoreOnChangeCommitStrategyTests :
     AbstractOnChangeCommitStrategyTests(store = MVDataStore.open(Path(DB_PATH), DataStore.CommitStrategy.OnChange)),
