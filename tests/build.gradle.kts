@@ -1,27 +1,41 @@
 @file:Suppress("OPT_IN_USAGE")
 
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
-
 plugins {
-    convention
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    `publishing-convention`
+    `kotlin-multiplatform-convention`
     kotlin("plugin.power-assert")
 }
 
 kotlin {
-
     jvm()
     js {
         browser()
     }
+
+    mingwX64()
+
+    linuxX64()
+    linuxArm64()
+
     macosArm64()
     macosX64()
+
     iosArm64()
     iosX64()
     iosSimulatorArm64()
 
-    explicitApi = ExplicitApiMode.Disabled
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+
+    androidNativeX64()
+    androidNativeX86()
+    androidNativeArm64()
+    androidNativeArm32()
 
     sourceSets {
 
@@ -36,21 +50,13 @@ kotlin {
 
         jvmMain {
             dependencies {
+                api(libs.junit.jupiter.api)
                 api(kotlin("test-junit5"))
-            }
-        }
-
-        jsMain {
-            dependencies {
-                api(kotlin("test-js"))
             }
         }
     }
 }
 
 powerAssert {
-    functions =
-        setOf(
-            "kotlin.test.assertEquals",
-        )
+    functions = setOf("kotlin.test.assertEquals")
 }

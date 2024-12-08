@@ -1,31 +1,27 @@
-on: [ pull_request, push ]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 name: Test and lint
 
 jobs:
-
   check:
-    name: Test and lint (without RocksDB)
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu, windows, macos]
+    runs-on: ${{ matrix.os }}-latest
+    name: "[${{ matrix.os }}] Test and lint"
     steps:
-    - uses: actions/checkout@v2
-    - uses: gradle/actions/setup-gradle@v3
-    - uses: maxim-lobanov/setup-xcode@v1
+    - uses: actions/checkout@v4
       with:
-        xcode-version: '15.3'
+        submodules: recursive
+    - uses: actions/setup-java@v4
+      with:
+        distribution: corretto
+        java-version: 21
+    - run: chmod +x gradlew
+    - uses: gradle/actions/setup-gradle@v4
     - name: Run tests
       run: ./gradlew check
-
-  rocksdb-check:
-    name: Test and lint (with RocksDB)
-    runs-on: macos-latest
-    env:
-      ENABLE_ROCKSDB_NATIVE: true
-    steps:
-      - uses: actions/checkout@v2
-      - uses: gradle/actions/setup-gradle@v3
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '15.3'
-      - name: Run tests
-        run: ./gradlew check
