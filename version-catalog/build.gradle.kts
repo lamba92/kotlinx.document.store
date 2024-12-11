@@ -2,7 +2,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.writeText
 
 plugins {
-    convention
+    versions
     `version-catalog`
     `maven-publish`
 }

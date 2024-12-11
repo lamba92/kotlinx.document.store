@@ -8,12 +8,12 @@ plugins {
 }
 
 application {
-    mainClass = "kotlinx.document.database.samples.ktor.server.MainKt"
+    mainClass = "kotlinx.document.store.samples.ktor.server.MainKt"
 }
 
 dependencies {
     implementation(projects.samples)
-    implementation(projects.stores.rocksdb)
+    implementation(projects.stores.leveldb)
     implementation(libs.ktor.server.cio)
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)

@@ -1,16 +1,18 @@
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
-
 plugins {
-    convention
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    `publishing-convention`
+    `kotlin-multiplatform-convention`
 }
 
 kotlin {
     js {
-        browser()
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
+        }
     }
-    explicitApi = ExplicitApiMode.Disabled
     sourceSets {
         val jsMain by getting {
             dependencies {

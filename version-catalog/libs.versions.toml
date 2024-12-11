@@ -1,10 +1,10 @@
 [versions]
-kotlinx-document-store="%%%VERSION%%%"
+kotlin-document-store="%%%VERSION%%%"
 
 
 [libraries]
-core = { module = "com.github.lamba92:kotlinx-document-store-core", version.ref = "kotlinx-document-store" }
-mvstore = { module = "com.github.lamba92:kotlinx-document-store-mvstore", version.ref = "kotlinx-document-store" }
-browser = { module = "com.github.lamba92:kotlinx-document-store-browser", version.ref = "kotlinx-document-store" }
-rocksdb = { module = "com.github.lamba92:kotlinx-document-store-rocksdb", version.ref = "kotlinx-document-store" }
-
+core = { module = "com.github.lamba92:kotlin-document-store-core", version.ref = "kotlin-document-store" }
+mvstore = { module = "com.github.lamba92:kotlin-document-store-mvstore", version.ref = "kotlin-document-store" }
+browser = { module = "com.github.lamba92:kotlin-document-store-browser", version.ref = "kotlin-document-store" }
+leveldb = { module = "com.github.lamba92:kotlin-document-store-leveldb", version.ref = "kotlin-document-store" }
+tests = { module = "com.github.lamba92:kotlin-document-store-tests", version.ref = "kotlin-document-store" }

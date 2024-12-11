@@ -1,7 +1,6 @@
 plugins {
-    convention
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    `publishing-convention`
+    `kotlin-jvm-convention`
 }
 
 dependencies {
@@ -13,4 +12,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.datetime)
     testImplementation(kotlin("test-junit5"))
+}
+
+publishing.publications.register<MavenPublication>("main") {
+    from(components["kotlin"])
 }
