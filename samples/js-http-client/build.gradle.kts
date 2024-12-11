@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("com.github.node-gradle.node") version "7.0.2"
+    id("com.github.node-gradle.node") version "7.1.0"
 }
 
 kotlin {
