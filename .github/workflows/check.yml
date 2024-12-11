@@ -15,8 +15,6 @@ jobs:
     name: "[${{ matrix.os }}] Test and lint"
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
     - uses: actions/setup-java@v4
       with:
         distribution: corretto
@@ -24,4 +22,4 @@ jobs:
     - run: chmod +x gradlew
     - uses: gradle/actions/setup-gradle@v4
     - name: Run tests
-      run: ./gradlew check
+      run: ./gradlew build check

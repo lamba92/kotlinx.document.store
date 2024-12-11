@@ -10,8 +10,6 @@ jobs:
     name: "Create Sonatype Staging Repository"
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           distribution: adopt
@@ -33,8 +31,6 @@ jobs:
     name: "Publish artifacts on ${{ matrix.os }}"
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           distribution: adopt
@@ -55,8 +51,6 @@ jobs:
     name: "Close Sonatype Staging Repository"
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           distribution: adopt
