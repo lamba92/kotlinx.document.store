@@ -3,6 +3,10 @@ plugins {
     `kotlin-jvm-convention`
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     api(libs.h2)
     api(projects.core)
