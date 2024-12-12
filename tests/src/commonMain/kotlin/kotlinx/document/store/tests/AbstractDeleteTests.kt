@@ -4,12 +4,24 @@ package kotlinx.document.store.tests
 
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.test.TestResult
+import kotlinx.document.store.KotlinxDocumentStore
 import kotlinx.document.store.getObjectCollection
 import kotlinx.document.store.removeWhere
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.assertEquals
 
+/**
+ * Abstract base class for testing deletion functionality within a document store.
+ *
+ * It extends [BaseTest] to provide a set of tests that validate the behavior of various
+ * deletion operations performed on collections and documents within a [KotlinxDocumentStore].
+ * The tests include functionality for clearing collections, validating deletions for non-existent
+ * collections, handling indexed and non-indexed documents, as well as testing complex selectors.
+ *
+ * This class is intended to be extended to define specific implementations of `DataStoreProvider`
+ * based on the Kotlin platform being used.
+ */
 public abstract class AbstractDeleteTests(store: DataStoreProvider) : BaseTest(store) {
     public companion object {
         public const val TEST_NAME_1: String = "deletes_collection"

@@ -7,16 +7,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.document.store.AbstractDataStore
+import kotlinx.document.store.DataStore
 import kotlinx.document.store.PersistentMap
-import kotlinx.io.files.Path
 
+/**
+ * A [LevelDB] implementation of the [DataStore] for persistent storage.
+ *
+ * `LevelDBStore` uses LevelDB to provide a disk-backed, reliable, and high-performance
+ * key-value storage system for managing named maps. It supports creating, retrieving,
+ * and deleting persistent maps, with each map uniquely identified by a prefix.
+ *
+ * This implementation ensures thread-safe access to data operations using synchronization
+ * mechanisms while leveraging LevelDB's batch operations for efficient map management.
+ *
+ * It is particularly suited for use cases that require fast sequential reads/writes
+ * and efficient use of disk storage.
+ */
 public class LevelDBStore(private val delegate: LevelDB) : AbstractDataStore() {
     public companion object {
-        public fun open(
-            path: Path,
-            options: LevelDBOptions = LevelDBOptions.DEFAULT,
-        ): LevelDBStore = open(path.toString(), options)
-
+        /**
+         * Opens a new [LevelDBStore] instance at the specified path with the given options.
+         *
+         * Intermediate directories are **NOT** created if they do not exist. The database will be created
+         * at the specified path as a directory.
+         *
+         * @param path The file system path where the LevelDB database will be created or accessed.
+         *             Can be provided as a `String` or a `Path`.
+         * @param options Optional [LevelDBOptions] to configure LevelDB (default is [LevelDBOptions.DEFAULT]).
+         * @return A new `LevelDBStore` instance backed by the LevelDB database at the specified path.
+         */
         public fun open(
             path: String,
             options: LevelDBOptions = LevelDBOptions.DEFAULT,

@@ -12,7 +12,6 @@ import kotlin.io.path.deleteRecursively
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("linting-convention")
     id("versions")
 }
 

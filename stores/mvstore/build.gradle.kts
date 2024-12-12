@@ -1,6 +1,7 @@
 plugins {
     `publishing-convention`
     `kotlin-jvm-convention`
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 kotlin {

@@ -1,6 +1,11 @@
 plugins {
     `publishing-convention`
     `kotlin-multiplatform-with-android-convention`
+    id("org.jlleitschuh.gradle.ktlint")
+}
+
+android {
+    namespace = "kotlinx.document.store.tests"
 }
 
 kotlin {
@@ -83,6 +88,16 @@ kotlin {
         }
         tvosTest {
             dependsOn(appleMobileTest)
+        }
+
+        val commonJvmMain by creating {
+            dependsOn(commonMain.get())
+        }
+        androidMain {
+            dependsOn(commonJvmMain)
+        }
+        jvmMain {
+            dependsOn(commonJvmMain)
         }
 
         val commonJvmTest by creating {

@@ -6,9 +6,25 @@ import kotlinx.document.store.PersistentMap
 import kotlinx.document.store.SerializableEntry
 import kotlinx.document.store.UpdateResult
 
-public fun PersistentMap<String, String>.asCollectionMap(): Collection = Collection(this)
+/**
+ * Converts a [PersistentMap] instance into a [PersistentCollection].
+ *
+ * @return A [PersistentCollection] that wraps the current [PersistentMap].
+ */
+public fun PersistentMap<String, String>.asCollectionMap(): PersistentCollection = PersistentCollection(this)
 
-public class Collection(private val delegate: PersistentMap<String, String>) : PersistentMap<Long, String> {
+/**
+ * PersistentCollection is an implementation of the PersistentMap interface, which adapts
+ * a PersistentMap<String, String> as a PersistentMap<Long, String>. It provides support
+ * for suspendable and persistent key-value operations, where the keys are of type Long.
+ *
+ * This class leverages an underlying PersistentMap<String, String> for its operations,
+ * and ensures compatibility by converting Long keys to their String representation.
+ *
+ * @constructor Creates a PersistentCollection instance with a specified PersistentMap<String, String>.
+ * @param delegate The underlying PersistentMap<String, String> used to perform operations.
+ */
+public class PersistentCollection(private val delegate: PersistentMap<String, String>) : PersistentMap<Long, String> {
     override suspend fun clear(): Unit = delegate.clear()
 
     override suspend fun size(): Long = delegate.size()

@@ -1,6 +1,13 @@
+@file:Suppress("OPT_IN_USAGE")
+
 plugins {
     `publishing-convention`
     `kotlin-multiplatform-with-android-convention`
+    id("org.jlleitschuh.gradle.ktlint")
+}
+
+android {
+    namespace = "kotlinx.document.store.core"
 }
 
 kotlin {
@@ -36,6 +43,10 @@ kotlin {
     androidNativeArm64()
     androidNativeArm32()
 
+    wasmWasi {
+        nodejs()
+    }
+
     applyDefaultHierarchyTemplate()
 
     sourceSets {
@@ -44,7 +55,6 @@ kotlin {
             dependencies {
                 api(libs.kotlinx.serialization.json)
                 api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.io.core)
             }
         }
     }

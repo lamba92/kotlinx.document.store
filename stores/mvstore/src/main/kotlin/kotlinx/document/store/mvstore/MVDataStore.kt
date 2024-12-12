@@ -5,21 +5,44 @@ import kotlinx.coroutines.withContext
 import kotlinx.document.store.DataStore
 import kotlinx.document.store.PersistentMap
 import org.h2.mvstore.MVStore
+import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
-import java.nio.file.Path as JavaNioPath
-import kotlin.io.path.Path as JavaNioPath
-import kotlinx.io.files.Path as KotlinxIoPath
+import kotlin.io.path.createParentDirectories
 
+/**
+ * Implementation of the [DataStore] using [MVStore] from H2 Database.
+ *
+ * This class provides persistent and thread-safe storage for handling named maps.
+ * Each map is represented by a [PersistentMap] and stored within the underlying `MVStore` instance.
+ *
+ * The `MVDataStore` class supports creation, retrieval, and deletion of named persistent maps
+ * and leverages coroutines for suspendable operations to maintain thread safety.
+ */
 public class MVDataStore(private val delegate: MVStore) : DataStore {
     public companion object {
-        public fun open(path: String): MVDataStore = open(JavaNioPath(path))
+        /**
+         * Opens an `MVDataStore` at the specified string path. Intermediary directories
+         * are created if they do not exist. The database will be created at the specified path as
+         * a file.
+         *
+         * @param path A string representing the path to the `MVStore` file.
+         * @return A new instance of [MVDataStore] backed by the file at the specified path.
+         */
+        public fun open(path: String): MVDataStore = open(Path(path))
 
-        public fun open(path: KotlinxIoPath): MVDataStore = open(path.toString())
-
-        public fun open(path: JavaNioPath): MVDataStore =
+        /**
+         * Opens an `MVDataStore` at the specified string path. Intermediary directories
+         * are created if they do not exist. The database will be created at the specified path as
+         * a file.
+         *
+         * @param path A [Path] representing the path to the `MVStore` file.
+         * @return A new instance of [MVDataStore] backed by the file at the specified path.
+         */
+        public fun open(path: Path): MVDataStore =
             MVStore
                 .Builder()
-                .fileName(path.absolutePathString())
+                .fileName(path.createParentDirectories().absolutePathString())
                 .open()
                 .let { MVDataStore(it) }
     }
