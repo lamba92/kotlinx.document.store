@@ -8,8 +8,6 @@ import kotlinx.document.store.find
 import kotlinx.document.store.getObjectCollection
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
-import kotlin.js.JsName
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 public abstract class AbstractInsertTests(store: DataStoreProvider) : BaseTest(store) {
@@ -20,8 +18,7 @@ public abstract class AbstractInsertTests(store: DataStoreProvider) : BaseTest(s
     }
 
     @Test
-    @JsName(TEST_NAME_1)
-    public fun `inserts and retrieves a document without index`(): TestResult =
+    public fun insertsAndRetrievesADocumentWithoutIndex(): TestResult =
         runDatabaseTest(TEST_NAME_1) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             val testUser =
@@ -41,8 +38,7 @@ public abstract class AbstractInsertTests(store: DataStoreProvider) : BaseTest(s
         }
 
     @Test
-    @JsName(TEST_NAME_2)
-    public fun `inserts and retrieves a document with index`(): TestResult =
+    public fun insertsAndRetrievesADocumentWithIndex(): TestResult =
         runDatabaseTest(TEST_NAME_2) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
@@ -68,8 +64,7 @@ public abstract class AbstractInsertTests(store: DataStoreProvider) : BaseTest(s
         }
 
     @Test
-    @JsName(TEST_NAME_3)
-    public fun `inserts and retrieves a document using complex index`(): TestResult =
+    public fun insertsAndRetrievesADocumentUsingComplexIndex(): TestResult =
         runDatabaseTest(TEST_NAME_3) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("addresses.$0")

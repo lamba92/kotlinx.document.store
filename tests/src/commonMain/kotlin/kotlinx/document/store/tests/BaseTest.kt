@@ -1,3 +1,5 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+
 package kotlinx.document.store.tests
 
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +35,9 @@ public abstract class BaseTest(private val storeProvider: DataStoreProvider) : D
             }
         }
 }
+
+@Target(AnnotationTarget.FUNCTION)
+public expect annotation class Test()
 
 public fun interface DataStoreProvider {
     public fun provide(testName: String): DataStore

@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.TestResult
 import kotlinx.document.store.find
 import kotlinx.document.store.getObjectCollection
-import kotlin.js.JsName
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 public abstract class AbstractFindTests(store: DataStoreProvider) : BaseTest(store) {
@@ -18,8 +16,7 @@ public abstract class AbstractFindTests(store: DataStoreProvider) : BaseTest(sto
     }
 
     @Test
-    @JsName(TEST_NAME_1)
-    public fun `finds a document using index`(): TestResult =
+    public fun findsADocumentUsingIndex(): TestResult =
         runDatabaseTest(TEST_NAME_1) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
@@ -34,8 +31,7 @@ public abstract class AbstractFindTests(store: DataStoreProvider) : BaseTest(sto
         }
 
     @Test
-    @JsName(TEST_NAME_2)
-    public fun `finds a document using complex index`(): TestResult =
+    public fun findsADocumentUsingComplexIndex(): TestResult =
         runDatabaseTest(TEST_NAME_2) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("addresses.$0")

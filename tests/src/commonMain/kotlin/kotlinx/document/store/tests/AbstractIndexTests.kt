@@ -11,8 +11,6 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
-import kotlin.js.JsName
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -32,8 +30,7 @@ public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(st
     }
 
     @Test
-    @JsName(TEST_NAME_1)
-    public fun `id is correctly increased after insert`(): TestResult =
+    public fun idIsCorrectlyIncreasedAfterInsert(): TestResult =
         runDatabaseTest(TEST_NAME_1) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.insert(TestUser.Mario)
@@ -59,8 +56,7 @@ public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(st
         }
 
     @Test
-    @JsName(TEST_NAME_2)
-    public fun `index is correctly created after insert`(): TestResult =
+    public fun indexIsCorrectlyCreatedAfterInsert(): TestResult =
         runDatabaseTest(TEST_NAME_2) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             val userId = collection.insert(TestUser.Mario).id ?: error("No id found")
@@ -75,8 +71,7 @@ public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(st
         }
 
     @Test
-    @JsName(TEST_NAME_3)
-    public fun `index is correctly created before insert`(): TestResult =
+    public fun indexIsCorrectlyCreatedBeforeInsert(): TestResult =
         runDatabaseTest(TEST_NAME_3) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
@@ -90,8 +85,7 @@ public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(st
         }
 
     @Test
-    @JsName(TEST_NAME_4)
-    public fun `index is correctly created after insert and update`(): TestResult =
+    public fun indexIsCorrectlyCreatedAfterInsertAndUpdate(): TestResult =
         runDatabaseTest(TEST_NAME_4) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             val marioId = collection.insert(TestUser.Mario).id ?: error("No id found")
@@ -115,8 +109,7 @@ public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(st
         }
 
     @Test
-    @JsName(TEST_NAME_5)
-    public fun `object index is created before insert test`(): TestResult =
+    public fun objectIndexIsCreatedBeforeInsertTest(): TestResult =
         runDatabaseTest(TEST_NAME_5) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("addresses.$0")

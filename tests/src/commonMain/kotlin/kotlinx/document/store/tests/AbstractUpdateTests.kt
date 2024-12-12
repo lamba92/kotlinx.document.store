@@ -7,8 +7,6 @@ import kotlinx.coroutines.test.TestResult
 import kotlinx.document.store.getObjectCollection
 import kotlinx.document.store.updateWhere
 import kotlinx.serialization.json.JsonPrimitive
-import kotlin.js.JsName
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -21,8 +19,7 @@ public abstract class AbstractUpdateTests(store: DataStoreProvider) : BaseTest(s
     }
 
     @Test
-    @JsName(TEST_NAME_1)
-    public fun `updates a document without index`(): TestResult =
+    public fun updatesADocumentWithoutIndex(): TestResult =
         runDatabaseTest(TEST_NAME_1) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
 
@@ -39,8 +36,7 @@ public abstract class AbstractUpdateTests(store: DataStoreProvider) : BaseTest(s
         }
 
     @Test
-    @JsName(TEST_NAME_2)
-    public fun `updates a document with index`(): TestResult =
+    public fun updatesADocumentWithIndex(): TestResult =
         runDatabaseTest(TEST_NAME_2) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
@@ -68,8 +64,7 @@ public abstract class AbstractUpdateTests(store: DataStoreProvider) : BaseTest(s
         }
 
     @Test
-    @JsName(TEST_NAME_3)
-    public fun `upsert inserts a document without index`(): TestResult =
+    public fun upsertInsertsADocumentWithoutIndex(): TestResult =
         runDatabaseTest(TEST_NAME_3) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
 
@@ -90,8 +85,7 @@ public abstract class AbstractUpdateTests(store: DataStoreProvider) : BaseTest(s
         }
 
     @Test
-    @JsName(TEST_NAME_4)
-    public fun `upsert inserts a document with index`(): TestResult =
+    public fun upsertInsertsADocumentWithIndex(): TestResult =
         runDatabaseTest(TEST_NAME_4) { db ->
             val collection = db.getObjectCollection<TestUser>("test")
             collection.createIndex("name")
