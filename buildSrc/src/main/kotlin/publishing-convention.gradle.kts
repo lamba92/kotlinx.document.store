@@ -32,7 +32,7 @@ publishing {
         pom {
             name = "kotlin-document-store"
             description = "Kotlin Multiplatform NoSQL document storage"
-            url = "https://github.com/lamba92/kotlin-document-store"
+            url = "https://github.com/lamba92/kotlin.document.store"
             licenses {
                 license {
                     name = "Apache-2.0"
@@ -47,9 +47,9 @@ publishing {
                 }
             }
             scm {
-                connection = "https://github.com/lamba92/kotlinx-document-store.git"
-                developerConnection = "https://github.com/lamba92/kotlinx-document-store.git"
-                url = "https://github.com/lamba92/kotlinx-document-store.git"
+                connection = "https://github.com/lamba92/kotlinx.document.store.git"
+                developerConnection = "https://github.com/lamba92/kotlinx.document.store.git"
+                url = "https://github.com/lamba92/kotlinx.document.store.git"
             }
         }
     }
