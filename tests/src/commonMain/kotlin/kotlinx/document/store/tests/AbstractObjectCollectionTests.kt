@@ -6,10 +6,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.test.TestResult
-import kotlinx.document.store.getObjectCollection
+import kotlinx.document.store.core.getObjectCollection
+import kotlinx.document.store.core.updateWhere
 import kotlinx.document.store.tests.TestUser.Companion.Luigi
 import kotlinx.document.store.tests.TestUser.Companion.Mario
-import kotlinx.document.store.updateWhere
 import kotlin.test.assertFails
 import kotlin.time.Duration.Companion.seconds
 

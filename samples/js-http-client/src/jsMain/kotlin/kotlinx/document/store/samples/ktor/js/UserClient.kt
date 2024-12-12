@@ -16,9 +16,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.document.store.KotlinxDocumentStore
-import kotlinx.document.store.browser.BrowserStore
 import kotlinx.document.store.samples.User
+import kotlinx.document.store.stores.browser.BrowserStore
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.js.Promise
@@ -53,7 +52,7 @@ class UserClient(
             }
         }
 
-    private val cache = KotlinxDocumentStore(BrowserStore)
+    private val cache = kotlinx.document.store.core.KotlinxDocumentStore(BrowserStore)
 
     @Serializable
     data class GetAllUsersRequest(val page: Int, val pageSize: Int)

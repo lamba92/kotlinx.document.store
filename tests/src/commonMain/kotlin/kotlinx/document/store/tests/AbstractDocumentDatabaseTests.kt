@@ -4,7 +4,7 @@ package kotlinx.document.store.tests
 
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestResult
-import kotlinx.document.store.getObjectCollection
+import kotlinx.document.store.core.getObjectCollection
 import kotlin.test.assertEquals
 
 /**

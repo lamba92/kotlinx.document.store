@@ -8,8 +8,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
-import kotlinx.document.store.DataStore
-import kotlinx.document.store.KotlinxDocumentStore
+import kotlinx.document.store.core.DataStore
+import kotlinx.document.store.core.KotlinxDocumentStore
 import kotlinx.serialization.modules.SerializersModule
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
