@@ -38,7 +38,9 @@ val levelDbPath: Path = file("../kotlin-leveldb").toPath()
 
 val localLeveldbExists = levelDbPath.isDirectory() && levelDbPath.resolve("settings.gradle.kts").exists()
 
-if (localLeveldbExists && !isCi) {
+val useLocalLevelDb: Boolean? by settings
+
+if (localLeveldbExists && !isCi && useLocalLevelDb == true) {
     includeBuild(levelDbPath.absolutePathString()) {
         val endings = listOf(
             "jvm",

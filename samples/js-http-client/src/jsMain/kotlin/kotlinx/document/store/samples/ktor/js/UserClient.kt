@@ -32,6 +32,7 @@ data class CacheEntry<K, V>(
     val lastUpdate: Instant = Clock.System.now(),
 )
 
+@OptIn(ExperimentalJsExport::class)
 @JsExport
 class UserClient(
     val protocol: String = "http",

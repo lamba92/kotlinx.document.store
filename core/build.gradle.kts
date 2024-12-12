@@ -5,6 +5,7 @@ plugins {
 
 kotlin {
     jvm()
+    androidTarget()
     js {
         browser()
     }

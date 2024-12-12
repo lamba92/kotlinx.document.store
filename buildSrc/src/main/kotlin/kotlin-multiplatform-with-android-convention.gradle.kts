@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalPathApi::class, ExperimentalKotlinGradlePluginApi::class)
 
+import com.android.build.gradle.internal.tasks.MergeJavaResourceTask
 import com.android.build.gradle.tasks.factory.AndroidUnitTest
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -18,10 +19,14 @@ android {
         minSdk = 21
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    packaging {
+        resources {
+            excludes += setOf("**/*.md")
+        }
+    }
 }
 
 kotlin {
-    androidTarget()
     targets.withType<KotlinAndroidTarget> {
         publishLibraryVariants("release")
 
@@ -39,4 +44,5 @@ tasks {
     withType<AndroidUnitTest> {
         onlyIf { false }
     }
+
 }
