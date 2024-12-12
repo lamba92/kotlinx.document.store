@@ -118,8 +118,6 @@ The library provides platform-specific implementations for persistent data store
 - **JVM using MVStore**:
 
 ```kotlin
-import kotlinx.document.store.mvstore.MVDataStore
-
 fun main() {
     val store = MVDataStore.open("data.mv.db")
     println("Persistent MVStore Database Initialized!")
@@ -130,8 +128,6 @@ fun main() {
 - **All Kotlin platforms using LevelDB**:
 
 ```kotlin
-import kotlinx.document.store.leveldb.LevelDBStore
-
 fun main() {
     val store = LevelDBStore.open("a/folder/leveldb")
     println("Persistent LevelDB Database Initialized!")
@@ -142,8 +138,6 @@ fun main() {
 - **Browser with IndexedDB**:
 
 ```kotlin
-import kotlinx.document.store.browser.BrowserStore
-
 suspend fun main() {
     val store = BrowserStore
     println("Browser IndexedDB Initialized!")
@@ -158,12 +152,6 @@ suspend fun main() {
 Once the `DataStore` has been initialized, retrieve and manipulate JSON-based collections:
 
 ```kotlin
-import kotlinx.document.store.KotlinxDocumentStore
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
-
 suspend fun main() {
     // Initialize the datastore (using MVStore as an example)
     val mvStore = MVDataStore.open("data.mv.db")
@@ -195,13 +183,6 @@ suspend fun main() {
 Use `ObjectCollection` to store and manipulate strongly typed objects:
 
 ```kotlin
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.Json
-import kotlinx.document.store.KotlinxDocumentStore
-import kotlinx.document.store.ObjectCollection
-import kotlinx.document.store.mvstore.MVDataStore
-
 @Serializable
 data class User(
     // id declaration is optional, but if declared make sure
