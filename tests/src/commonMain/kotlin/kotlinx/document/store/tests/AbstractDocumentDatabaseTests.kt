@@ -5,8 +5,6 @@ package kotlinx.document.store.tests
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestResult
 import kotlinx.document.store.getObjectCollection
-import kotlin.js.JsName
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 public abstract class AbstractDocumentDatabaseTests(store: DataStoreProvider) : BaseTest(store) {
@@ -15,8 +13,7 @@ public abstract class AbstractDocumentDatabaseTests(store: DataStoreProvider) : 
     }
 
     @Test
-    @JsName(TEST_NAME)
-    public fun `gets all collection names`(): TestResult =
+    public fun getsAllCollectionNames(): TestResult =
         runDatabaseTest(TEST_NAME) { db ->
             db.getObjectCollection<TestUser>("test")
             db.getObjectCollection<TestUser>("test2")

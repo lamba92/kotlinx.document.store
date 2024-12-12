@@ -98,13 +98,5 @@ kotlin {
         jvmTest {
             dependsOn(commonJvmTest)
         }
-
-        androidInstrumentedTest {
-            dependencies {
-                implementation(libs.androidx.test.runner)
-                implementation(libs.androidx.test.core)
-                implementation(libs.android.test.junit)
-            }
-        }
     }
 }

@@ -2,12 +2,13 @@
 
 plugins {
     `publishing-convention`
-    `kotlin-multiplatform-convention`
+    `kotlin-multiplatform-with-android-convention`
     kotlin("plugin.power-assert")
 }
 
 kotlin {
     jvm()
+    androidTarget()
     js {
         browser()
     }
@@ -52,6 +53,14 @@ kotlin {
             dependencies {
                 api(libs.junit.jupiter.api)
                 api(kotlin("test-junit5"))
+            }
+        }
+
+        androidMain {
+            dependencies {
+                api(libs.androidx.test.runner)
+                api(libs.androidx.test.core)
+                api(libs.android.test.junit)
             }
         }
     }
