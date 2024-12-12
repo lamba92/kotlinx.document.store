@@ -19,7 +19,10 @@ There are three main implementations of the `DataStore` interface:
 - **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore.
   - JVM
 - **LevelDB**: For all Kotlin platforms (including JVM), using [LevelDB](https://github.com/google/leveldb) key-value store.
-  - JVM
+  - JVM:
+    - Windows: arm64, x64
+    - Linux: arm64, x64
+    - macOs: arm64, x64
   - JS
   - Native (Linux, macOS, Windows, iOS, Android, Android native, watchOS, tvOS)
 - **Browser**: For browser-based applications, using the browser's [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) storage.
