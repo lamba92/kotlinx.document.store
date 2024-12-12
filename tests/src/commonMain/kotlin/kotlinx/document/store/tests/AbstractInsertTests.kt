@@ -10,6 +10,16 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.assertEquals
 
+/**
+ * Abstract base class for testing insertion functionality within a document store.
+ *
+ * It extends [BaseTest] and provides tests for validating the insertion and retrieval processes
+ * of documents. The tests include scenarios with and without indexes, as well as using complex
+ * indexes, to ensure that documents are correctly stored and retrieved in the expected manner.
+ *
+ * This class is intended to be extended to define specific implementations of `DataStoreProvider`
+ * for different Kotlin platforms.
+ */
 public abstract class AbstractInsertTests(store: DataStoreProvider) : BaseTest(store) {
     public companion object {
         public const val TEST_NAME_1: String = "inserts_and_retrieves_a_document_without_index"

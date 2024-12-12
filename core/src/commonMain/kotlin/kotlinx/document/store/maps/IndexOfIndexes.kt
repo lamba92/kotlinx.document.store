@@ -8,12 +8,30 @@ import kotlinx.document.store.UpdateResult
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+/**
+ * Converts a `PersistentMap<String, String>` into an `IndexOfIndexes` instance.
+ *
+ * This function wraps the given `PersistentMap` into an `IndexOfIndexes`, allowing
+ * the caller to interact with the underlying data using a transformed interface.
+ *
+ * @return An `IndexOfIndexes` instance wrapping the original `PersistentMap`.
+ */
 public fun PersistentMap<String, String>.asIndexOfIndexes(): IndexOfIndexes = IndexOfIndexes(this)
 
 private fun String.split() = Json.decodeFromString<List<String>>(this)
 
 private fun List<String>.join() = Json.encodeToString(this)
 
+/**
+ * A persistent map implementation that transforms and stores values as serialized lists of strings.
+ *
+ * `IndexOfIndexes` acts as a wrapper around a `PersistentMap` with `String` keys and `String` values.
+ * This class provides an interface to work with the underlying map where the values are serialized lists
+ * of strings. It handles encoding and decoding of the list data format, allowing users to interact with
+ * the data as `List<String>` rather than serialized strings.
+ *
+ * @property delegate The underlying `PersistentMap` instance used for storage and retrieval operations.
+ */
 public class IndexOfIndexes(private val delegate: PersistentMap<String, String>) : PersistentMap<String, List<String>> {
     override suspend fun clear(): Unit = delegate.clear()
 

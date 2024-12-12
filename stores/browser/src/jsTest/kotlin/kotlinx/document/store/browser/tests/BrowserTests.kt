@@ -13,37 +13,22 @@ import kotlinx.document.store.tests.AbstractInsertTests
 import kotlinx.document.store.tests.AbstractObjectCollectionTests
 import kotlinx.document.store.tests.AbstractUpdateTests
 import kotlinx.document.store.tests.DataStoreProvider
-import kotlinx.document.store.tests.DatabaseDeleter
 
-class BrowserDeleteTests :
-    AbstractDeleteTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserDeleteTests : AbstractDeleteTests(BrowserStoreProvider)
 
-class BrowserDocumentDatabaseTests :
-    AbstractDocumentDatabaseTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserDocumentDatabaseTests : AbstractDocumentDatabaseTests(BrowserStoreProvider)
 
-class BrowserIndexTests :
-    AbstractIndexTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserIndexTests : AbstractIndexTests(BrowserStoreProvider)
 
-class BrowserInsertTests :
-    AbstractInsertTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserInsertTests : AbstractInsertTests(BrowserStoreProvider)
 
-class BrowserUpdateTests :
-    AbstractUpdateTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserUpdateTests : AbstractUpdateTests(BrowserStoreProvider)
 
-class BrowserFindTests :
-    AbstractFindTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserFindTests : AbstractFindTests(BrowserStoreProvider)
 
-class BrowserObjectCollectionTests :
-    AbstractObjectCollectionTests(BrowserStoreProvider),
-    DatabaseDeleter by BrowserStoreProvider
+class BrowserObjectCollectionTests : AbstractObjectCollectionTests(BrowserStoreProvider)
 
-object BrowserStoreProvider : DataStoreProvider, DatabaseDeleter {
+object BrowserStoreProvider : DataStoreProvider {
     override suspend fun deleteDatabase(testName: String) {
         keyval.clear().await()
     }

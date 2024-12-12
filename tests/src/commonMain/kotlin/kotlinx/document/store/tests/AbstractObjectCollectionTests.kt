@@ -13,6 +13,16 @@ import kotlinx.document.store.updateWhere
 import kotlin.test.assertFails
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * Abstract base class for testing object collection features within a document store.
+ *
+ * It extends [BaseTest] and provides comprehensive tests for actions on object collections,
+ * such as validating the serialization of collection types, safeguarding against improper
+ * collection types (e.g., primitives or array-like structures), and handling concurrent
+ * modifications.
+ *
+ * This class is intended to be extended for platform-specific implementations of `DataStoreProvider`.
+ */
 public abstract class AbstractObjectCollectionTests(store: DataStoreProvider) : BaseTest(store) {
     public companion object {
         public const val TEST_NAME_1: String = "gets_all_collection_names"

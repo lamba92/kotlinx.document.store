@@ -16,38 +16,23 @@ import kotlinx.document.store.tests.AbstractInsertTests
 import kotlinx.document.store.tests.AbstractObjectCollectionTests
 import kotlinx.document.store.tests.AbstractUpdateTests
 import kotlinx.document.store.tests.DataStoreProvider
-import kotlinx.document.store.tests.DatabaseDeleter
 import kotlinx.io.files.Path
 
-class LevelDBDeleteTests :
-    AbstractDeleteTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBDeleteTests : AbstractDeleteTests(LevelDBStoreProvider)
 
-class LevelDBDocumentDatabaseTests :
-    AbstractDocumentDatabaseTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBDocumentDatabaseTests : AbstractDocumentDatabaseTests(LevelDBStoreProvider)
 
-class LevelDBIndexTests :
-    AbstractIndexTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBIndexTests : AbstractIndexTests(LevelDBStoreProvider)
 
-class LevelDBInsertTests :
-    AbstractInsertTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBInsertTests : AbstractInsertTests(LevelDBStoreProvider)
 
-class LevelDBUpdateTests :
-    AbstractUpdateTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBUpdateTests : AbstractUpdateTests(LevelDBStoreProvider)
 
-class LevelDBFindTests :
-    AbstractFindTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBFindTests : AbstractFindTests(LevelDBStoreProvider)
 
-class LevelDBObjectCollectionTests :
-    AbstractObjectCollectionTests(LevelDBStoreProvider),
-    DatabaseDeleter by LevelDBStoreProvider
+class LevelDBObjectCollectionTests : AbstractObjectCollectionTests(LevelDBStoreProvider)
 
-object LevelDBStoreProvider : DataStoreProvider, DatabaseDeleter {
+object LevelDBStoreProvider : DataStoreProvider {
     private fun getDbPath(testName: String) = Path(DB_PATH).resolve(testName)
 
     override suspend fun deleteDatabase(testName: String) =

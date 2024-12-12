@@ -6,8 +6,30 @@ import kotlinx.document.store.PersistentMap
 import kotlinx.document.store.SerializableEntry
 import kotlinx.document.store.UpdateResult
 
+/**
+ * Converts the current `PersistentMap` instance to an instance of `IdGenerator`.
+ *
+ * This transformation allows the key-value pairs in the `PersistentMap<String, String>`
+ * to be used as a persistent key-value store with key type `String` and value type `Long`,
+ * providing seamless serialization and deserialization of the values.
+ *
+ * @return An `IdGenerator` instance backed by the current `PersistentMap`.
+ */
 public fun PersistentMap<String, String>.asIdGenerator(): IdGenerator = IdGenerator(this)
 
+/**
+ * An implementation of the `PersistentMap` interface where the values are
+ * automatically converted between `String` and `Long` for storage and retrieval.
+ *
+ * This class delegates the actual storage and persistence operations to another
+ * `PersistentMap` instance, while providing a type-safe interface with `Long`
+ * values for the users. String-to-Long and Long-to-String conversions are handled
+ * implicitly during operations.
+ *
+ * @constructor Creates an `IdGenerator` with the specified delegate map.
+ * @param delegate The underlying `PersistentMap` that performs the actual
+ * storage operations. This map stores values as `String`.
+ */
 public class IdGenerator(private val delegate: PersistentMap<String, String>) : PersistentMap<String, Long> {
     override suspend fun clear(): Unit = delegate.clear()
 

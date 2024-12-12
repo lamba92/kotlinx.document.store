@@ -8,7 +8,6 @@ import kotlin.io.path.absolutePathString
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("linting-convention")
     id("versions")
 }
 

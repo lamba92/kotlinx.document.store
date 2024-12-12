@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.github.node-gradle.node") version "7.1.0"
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 kotlin {

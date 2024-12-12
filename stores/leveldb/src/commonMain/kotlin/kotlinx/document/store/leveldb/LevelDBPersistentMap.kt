@@ -15,6 +15,13 @@ import kotlinx.document.store.PersistentMap
 import kotlinx.document.store.SerializableEntry
 import kotlinx.document.store.UpdateResult
 
+/**
+ * A [PersistentMap] implementation backed by LevelDB.
+ *
+ * `LevelDBPersistentMap` provides a disk-based key-value store where each entry
+ * is prefixed with a unique namespace (prefix) to distinguish multiple maps stored
+ * in the same LevelDB instance.
+ */
 public class LevelDBPersistentMap(
     private val delegate: LevelDB,
     private val prefix: String,

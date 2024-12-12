@@ -1,6 +1,7 @@
 plugins {
     `publishing-convention`
     `kotlin-multiplatform-convention`
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 kotlin {
@@ -14,13 +15,9 @@ kotlin {
         }
     }
     sourceSets {
-        val jsMain by getting {
-            dependencies {
-                api(npm("idb-keyval", "6.2.1"))
-            }
-        }
         jsMain {
             dependencies {
+                api(npm("idb-keyval", "6.2.1"))
                 api(projects.core)
             }
         }

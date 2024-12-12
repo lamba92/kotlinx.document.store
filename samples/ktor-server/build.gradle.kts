@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     application
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 application {
