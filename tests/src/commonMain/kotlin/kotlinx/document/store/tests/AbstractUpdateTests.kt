@@ -10,6 +10,15 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+/**
+ * Abstract base class for testing update functionality within a document store.
+ *
+ * It extends [BaseTest] and validates both updating and upserting (updating or inserting) operations
+ * on documents. The tests include scenarios with and without indexes to ensure the expected behavior
+ * when modifying existing documents or adding them when they don’t exist.
+ *
+ * This class is intended to be extended to implement platform-specific `DataStoreProvider` behaviors.
+ */
 public abstract class AbstractUpdateTests(store: DataStoreProvider) : BaseTest(store) {
     public companion object {
         public const val TEST_NAME_1: String = "updates_a_document_without_index"

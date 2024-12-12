@@ -2,7 +2,30 @@ package kotlinx.document.store
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.Serializable
 
+/**
+ * Represents a serializable implementation of the [Map.Entry] interface.
+ *
+ * This class is used to store a key-value pair entry that can be serialized using
+ * Kotlin serialization. It is particularly useful in scenarios where key-value entries
+ * need to be persisted or transferred across systems while maintaining type safety.
+ *
+ * @param K The type of the key.
+ * @param V The type of the value.
+ * @property key The key of the entry.
+ * @property value The value of the entry.
+ */
+@Serializable
+public data class SerializableEntry<K, V>(
+    override val key: K,
+    override val value: V,
+) : Map.Entry<K, V>
+
+/**
+ * Returns a flow that ignores first [count] elements.
+ * Throws [IllegalArgumentException] if [count] is negative.
+ */
 public fun <T> Flow<T>.drop(count: Long): Flow<T> {
     require(count >= 0) { "Drop count should be non-negative, but had $count" }
     return flow {
@@ -13,6 +36,10 @@ public fun <T> Flow<T>.drop(count: Long): Flow<T> {
     }
 }
 
+/**
+ * Returns a sequence that ignores first [count] elements.
+ * Throws [IllegalArgumentException] if [count] is negative.
+ */
 public fun <T> Sequence<T>.drop(count: Long): Sequence<T> {
     require(count >= 0) { "Drop count should be non-negative, but had $count" }
     return sequence {

@@ -10,7 +10,22 @@ import kotlinx.coroutines.withContext
 import kotlinx.document.store.PersistentMap
 import kotlinx.document.store.UpdateResult
 import org.h2.mvstore.MVMap
+import org.h2.mvstore.MVStore
 
+/**
+ * Implementation of the [PersistentMap] using [MVMap], a map implementation
+ * provided by H2's [MVStore].
+ *
+ * This class offers a key-value store with suspendable operations and persistence across
+ * application restarts, utilizing the disk-backed capabilities of `MVStore`.
+ *
+ * The `MVPersistentMap` enables basic CRUD operations, concurrent access, and efficient
+ * management of entries with strong consistency guarantees.
+ *
+ * @param K The type of keys maintained by the map.
+ * @param V The type of values maintained by the map.
+ * @property delegate The underlying [MVMap] instance to which operations are delegated.
+ */
 public class MVPersistentMap<K, V>(
     private val delegate: MVMap<K, V>,
 ) : PersistentMap<K, V> {

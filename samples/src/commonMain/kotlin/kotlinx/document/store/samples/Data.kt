@@ -2,9 +2,9 @@
 
 package kotlinx.document.store.samples
 
+import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
-import kotlinx.serialization.Serializable
 
 @Serializable
 @JsExport

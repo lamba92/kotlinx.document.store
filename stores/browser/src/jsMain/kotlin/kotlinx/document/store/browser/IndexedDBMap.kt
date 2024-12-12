@@ -11,6 +11,19 @@ import kotlinx.document.store.PersistentMap
 import kotlinx.document.store.SerializableEntry
 import kotlinx.document.store.UpdateResult
 
+/**
+ * A browser-based implementation of the `DataStore` that uses `IndexedDB` for persistent storage.
+ *
+ * The `BrowserStore` enables web applications to store and manage named maps persistently
+ * in a client-side database (IndexedDB). It supports creating, retrieving, and deleting
+ * persistent maps, while ensuring thread safety through synchronization mechanisms.
+ *
+ * Each persistent map is backed by an `IndexedDBMap`, which provides efficient key-value
+ * storage and ensures data durability across browser sessions.
+ *
+ * This implementation is ideal for client-side scenarios where durable, structured storage
+ * is required in the browser environment.
+ */
 public class IndexedDBMap(
     private val name: String,
     private val mutex: Mutex,

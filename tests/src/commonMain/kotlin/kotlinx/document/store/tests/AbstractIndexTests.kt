@@ -14,6 +14,15 @@ import kotlinx.serialization.json.long
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+/**
+ * Abstract base class for testing index functionality within a document store.
+ *
+ * It extends [BaseTest] and includes a set of tests to validate the behavior of indexes,
+ * such as their creation before or after inserts and updates to the collections. These tests
+ * ensure proper indexing mechanisms for ensuring optimized search and retrieval operations.
+ *
+ * This class is intended to be extended to implement platform-specific behaviors for `DataStoreProvider`.
+ */
 public abstract class AbstractIndexTests(store: DataStoreProvider) : BaseTest(store) {
     public companion object {
         public val json: Json =

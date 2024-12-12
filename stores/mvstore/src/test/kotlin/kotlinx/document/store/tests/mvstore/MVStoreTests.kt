@@ -13,13 +13,12 @@ import kotlinx.document.store.tests.AbstractInsertTests
 import kotlinx.document.store.tests.AbstractObjectCollectionTests
 import kotlinx.document.store.tests.AbstractUpdateTests
 import kotlinx.document.store.tests.DataStoreProvider
-import kotlinx.document.store.tests.DatabaseDeleter
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteRecursively
 
-object MVDataStoreProvider : DataStoreProvider, DatabaseDeleter {
+object MVDataStoreProvider : DataStoreProvider {
     private fun getDbPath(testName: String) = Path(DB_PATH).resolve("$testName.mv.db")
 
     override fun provide(testName: String) =
@@ -35,32 +34,18 @@ object MVDataStoreProvider : DataStoreProvider, DatabaseDeleter {
         }
 }
 
-class MVStoreDeleteTests :
-    AbstractDeleteTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreDeleteTests : AbstractDeleteTests(MVDataStoreProvider)
 
-class MVStoreDocumentDatabaseTests :
-    AbstractDocumentDatabaseTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreDocumentDatabaseTests : AbstractDocumentDatabaseTests(MVDataStoreProvider)
 
-class MVStoreIndexTests :
-    AbstractIndexTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreIndexTests : AbstractIndexTests(MVDataStoreProvider)
 
-class MVStoreInsertTests :
-    AbstractInsertTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreInsertTests : AbstractInsertTests(MVDataStoreProvider)
 
-class MVStoreUpdateTests :
-    AbstractUpdateTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreUpdateTests : AbstractUpdateTests(MVDataStoreProvider)
 
-class MVStoreFindTests :
-    AbstractFindTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreFindTests : AbstractFindTests(MVDataStoreProvider)
 
-class MVStoreObjectCollectionTests :
-    AbstractObjectCollectionTests(MVDataStoreProvider),
-    DatabaseDeleter by MVDataStoreProvider
+class MVStoreObjectCollectionTests : AbstractObjectCollectionTests(MVDataStoreProvider)
 
 val DB_PATH: String by System.getenv()

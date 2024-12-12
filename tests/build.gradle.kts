@@ -4,6 +4,11 @@ plugins {
     `publishing-convention`
     `kotlin-multiplatform-with-android-convention`
     kotlin("plugin.power-assert")
+    id("org.jlleitschuh.gradle.ktlint")
+}
+
+android {
+    namespace = "kotlinx.document.store.tests"
 }
 
 kotlin {
@@ -38,14 +43,18 @@ kotlin {
     androidNativeArm64()
     androidNativeArm32()
 
+    wasmWasi {
+        nodejs()
+    }
+
     sourceSets {
 
         commonMain {
             dependencies {
                 api(projects.core)
                 api(kotlin("test"))
-                api(libs.kotlinx.datetime)
                 api(libs.kotlinx.coroutines.test)
+                api(libs.kotlinx.io.core)
             }
         }
 
