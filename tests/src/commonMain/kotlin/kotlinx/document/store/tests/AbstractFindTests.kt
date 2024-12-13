@@ -5,9 +5,9 @@ package kotlinx.document.store.tests
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.TestResult
-import kotlinx.document.store.KotlinxDocumentStore
-import kotlinx.document.store.find
-import kotlinx.document.store.getObjectCollection
+import kotlinx.document.store.core.KotlinxDocumentStore
+import kotlinx.document.store.core.find
+import kotlinx.document.store.core.getObjectCollection
 import kotlin.test.assertEquals
 
 /**

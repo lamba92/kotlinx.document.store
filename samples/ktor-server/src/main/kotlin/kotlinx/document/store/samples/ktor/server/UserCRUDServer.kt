@@ -17,8 +17,8 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.document.store.ObjectCollection
-import kotlinx.document.store.find
+import kotlinx.document.store.core.ObjectCollection
+import kotlinx.document.store.core.find
 import kotlinx.document.store.samples.Page
 import kotlinx.document.store.samples.User
 import kotlinx.serialization.ExperimentalSerializationApi

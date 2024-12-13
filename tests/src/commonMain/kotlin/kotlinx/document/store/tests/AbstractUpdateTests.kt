@@ -4,8 +4,8 @@ package kotlinx.document.store.tests
 
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.TestResult
-import kotlinx.document.store.getObjectCollection
-import kotlinx.document.store.updateWhere
+import kotlinx.document.store.core.getObjectCollection
+import kotlinx.document.store.core.updateWhere
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

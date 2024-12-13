@@ -4,9 +4,9 @@ package kotlinx.document.store.tests
 
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.test.TestResult
-import kotlinx.document.store.KotlinxDocumentStore
-import kotlinx.document.store.getObjectCollection
-import kotlinx.document.store.removeWhere
+import kotlinx.document.store.core.KotlinxDocumentStore
+import kotlinx.document.store.core.getObjectCollection
+import kotlinx.document.store.core.removeWhere
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.assertEquals
