@@ -14,6 +14,20 @@ Some key highlights:
 
 Whether you're building desktop, web, or backend applications, `kotlin.document.store` provides a unified, intuitive way to manage structured or unstructured data across platforms.
 
+1. [Overview](#kotlindocumentstore)
+2. [Supported Platforms](#supported-platforms)
+3. [Quickstart](#quickstart)
+   - [Dependency Setup](#dependency-setup)
+     - [Gradle Setup](#gradle-setup)
+     - [Version Catalog Setup](#using-version-catalog)
+   - [Initialize a Persistent DataStore](#initialize-a-persistent-datastore)
+   - [Create and Use Collections](#create-and-use-collections)
+   - [Typed Objects with Serialization](#typed-objects-with-serialization)
+   - [Advanced: Indexing and Querying](#advanced-indexing-and-querying)
+4. [Testing](#testing)
+  - [DataStore Test Setup](#datastore-test-setup)
+  - [Available Test Implementations](#available-test-implementations)
+
 # Supported Platforms
 There are three main implementations of the `DataStore` interface:
 - **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore.
@@ -34,8 +48,10 @@ The modules `core` and `test` are common to all platforms and contain the main i
 
 # Quickstart
 
+## Dependency Setup
 Import the library to your project, see the latest version in the [Releases](https://github.com/lamba92/kotlin.document.store/releases) page:
 
+### Gradle Setup
 ```kotlin
 // build.gradle.kts
 
@@ -67,7 +83,7 @@ kotlin {
     }
 }
 ```
-
+### Using Version Catalog
 Alternatively with the provided version catalog:
 ```kotlin
 // settings.gradle.kts
@@ -113,7 +129,7 @@ To get started using `kotlin.document.store`, follow this guide:
 
 ---
 
-### 1. Initialize a Persistent DataStore
+### Initialize a Persistent DataStore
 
 The library provides platform-specific implementations for persistent data stores. Initialize one depending on your target platform:
 
@@ -149,7 +165,7 @@ suspend fun main() {
 
 ---
 
-### 2. Create and Use Collections
+### Create and Use Collections
 
 Once the `DataStore` has been initialized, retrieve and manipulate JSON-based collections:
 
@@ -180,7 +196,7 @@ suspend fun main() {
 
 ---
 
-### 3. Typed Objects with Serialization
+### Typed Objects with Serialization
 
 Use `ObjectCollection` to store and manipulate strongly typed objects:
 
@@ -220,7 +236,7 @@ suspend fun main() {
 
 ---
 
-### 4. Advanced: Indexing and Querying
+### Advanced: Indexing and Querying
 
 Speed up queries by using indexes:
 
@@ -256,6 +272,7 @@ suspend fun main() {
 
 # Testing
 
+## DataStore Test Setup
 To test your own implementation of [DataStore](core/src/commonMain/kotlin/com/github/lamba92/kotlin/document/store/core/DataStore.kt), 
 you can use the provided module `kotlin-document-store-test`:
 
@@ -278,7 +295,7 @@ kotlin {
     }
 }
 ```
-
+## Available Test Implementations
 Classes of tests are provided and only the implementation of `DataStore` is needed to run them. See test implementation for:
 - [MVDataStore](stores/mvstore/src/test/kotlin/com/github/lamba92/kotlin/document/store/tests/stores/mvstore/MVStoreTests.kt)
 - [LevelDBStore](stores/leveldb/src/commonTest/kotlin/com/github/lamba92/kotlin/document/store/tests/stores/leveldb/LeveldbTests.kt)
