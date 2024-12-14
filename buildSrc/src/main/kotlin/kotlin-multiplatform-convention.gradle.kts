@@ -12,10 +12,9 @@ import kotlin.io.path.deleteRecursively
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("org.jetbrains.dokka")
     id("versions")
 }
-
-val currentOs: OperatingSystem = OperatingSystem.current()
 
 kotlin {
     sourceSets.silenceOptIns()
@@ -65,27 +64,4 @@ tasks {
             showStackTraces = true
         }
     }
-
-    // in CI we only want to publish the artifacts for the current OS only
-    // but when developing we want to publish all the possible artifacts to test them
-    if (isCi) {
-
-        val linuxNames = listOf("linux", "android", "jvm", "js", "kotlin", "metadata", "wasm")
-        val windowsNames = listOf("mingw", "windows")
-        val appleNames = listOf("macos", "ios", "watchos", "tvos")
-
-        withType<AbstractPublishToMaven> {
-            when {
-                name.containsAny(linuxNames) -> onlyIf { currentOs.isLinux }
-                name.containsAny(windowsNames) -> onlyIf { currentOs.isWindows }
-                name.containsAny(appleNames) -> onlyIf { currentOs.isMacOsX }
-            }
-        }
-    }
 }
-
-val isCi
-    get() = System.getenv("CI") == "true"
-
-fun String.containsAny(strings: List<String>, ignoreCase: Boolean = true): Boolean =
-    strings.any { contains(it, ignoreCase) }
