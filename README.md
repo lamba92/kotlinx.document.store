@@ -18,7 +18,7 @@ Whether you're building desktop, web, or backend applications, `kotlin.document.
 There are three main implementations of the `DataStore` interface:
 - **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore.
   - JVM
-- **LevelDB**: For all Kotlin platforms (excluding JS and Wasm), using [LevelDB](https://github.com/google/leveldb) key-value store.
+- **LevelDB**: For all Kotlin platforms (excluding JS and Wasm), using [kotlin-leveldb](https://github.com/lamba92/kotlin-leveldb) key-value store.
   - JVM:
     - Windows: arm64, x64
     - Linux: arm64, x64
@@ -27,6 +27,8 @@ There are three main implementations of the `DataStore` interface:
   - Native (Linux, macOS, Windows, iOS, Android, Android native, watchOS, tvOS)
 - **Browser**: For browser-based applications, using the browser's [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) storage.
   - JS
+
+google/leveldb is licensed under [BSD-3-Clause license](https://github.com/google/leveldb/blob/main/LICENSE), all rights reserved to the original authors.
 
 The modules `core` and `test` are common to all platforms and contain the main interfaces and tests for the library and they support also `wasmWasi`.
 
