@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.github.lamba92.kotlin.document.store.tests.browser
+package com.github.lamba92.kotlin.document.store.tests.stores.browser
 
 import com.github.lamba92.kotlin.document.store.core.DataStore
 import com.github.lamba92.kotlin.document.store.stores.browser.BrowserStore
