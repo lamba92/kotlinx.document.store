@@ -46,7 +46,7 @@ dependencies {
 // Kotlin/JS
 kotlin {
     sourceSets {
-        val jsMain by getting {
+        jsMain {
             dependencies {
                 implementation("com.github.lamba92:kotlin-document-store-browser:{latest_version}")
             }
@@ -57,7 +57,7 @@ kotlin {
 // Kotlin/Multiplatform (excluding wasm and js)
 kotlin {
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation("com.github.lamba92:kotlin-document-store-leveldb:{latest_version}")
             }
@@ -87,7 +87,7 @@ dependencies {
 // Kotlin/JS
 kotlin {
   sourceSets {
-    val jsMain by getting {
+    jsMain {
       dependencies {
         implementation(kotlinDocumentStore.browser)
       }
@@ -98,7 +98,7 @@ kotlin {
 // Kotlin/Multiplatform (excluding wasm and js)
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(kotlinDocumentStore.leveldb)
       }
