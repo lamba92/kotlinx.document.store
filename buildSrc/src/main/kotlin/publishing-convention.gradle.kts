@@ -26,7 +26,7 @@ publishing {
         // the publishing plugin is old AF and does not support lazy
         // properties, so we need to set the artifactId after the
         // publication is created
-        afterEvaluate { artifactId = "kotlinx-document-store-$artifactId" }
+        afterEvaluate { artifactId = "kotlin-document-store-$artifactId" }
 
         artifact(javadocJar)
         pom {
@@ -47,9 +47,9 @@ publishing {
                 }
             }
             scm {
-                connection = "https://github.com/lamba92/kotlinx.document.store.git"
-                developerConnection = "https://github.com/lamba92/kotlinx.document.store.git"
-                url = "https://github.com/lamba92/kotlinx.document.store.git"
+                connection = "https://github.com/lamba92/kotlin.document.store.git"
+                developerConnection = "https://github.com/lamba92/kotlin.document.store.git"
+                url = "https://github.com/lamba92/kotlin.document.store.git"
             }
         }
     }

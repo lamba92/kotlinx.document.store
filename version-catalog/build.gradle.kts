@@ -39,7 +39,7 @@ catalog {
 publishing {
     publications {
         create<MavenPublication>(rootProject.name) {
-            artifactId = "kotlinx-document-store-version-catalog"
+            artifactId = "kotlin-document-store-version-catalog"
             from(components["versionCatalog"])
         }
     }

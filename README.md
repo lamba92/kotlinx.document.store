@@ -1,6 +1,6 @@
-# Overview
+# kotlin.document.store
 
-`kotlinx.document.store` is a Kotlin Multiplatform library that provides a simple abstraction over platform-specific key-value stores (LevelDB, IndexedDB and MVStore) to manage JSON documents.
+NoSql document store for Kotlin Multiplatform projects.
 
 With support for typed and schemaless data, this library enables you to work with JSON objects easily while leveraging `kotlinx.serialization` for seamless object serialization/deserialization.
 
@@ -18,7 +18,7 @@ Whether you're building desktop, web, or backend applications, `kotlinx.document
 There are three main implementations of the `DataStore` interface:
 - **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore.
   - JVM
-- **LevelDB**: For all Kotlin platforms (including JVM), using [LevelDB](https://github.com/google/leveldb) key-value store.
+- **LevelDB**: For all Kotlin platforms (excluding JS and Wasm), using [LevelDB](https://github.com/google/leveldb) key-value store.
   - JVM:
     - Windows: arm64, x64
     - Linux: arm64, x64
@@ -251,3 +251,6 @@ suspend fun main() {
     documentStore.close()
 }
 ```
+
+# Testing
+

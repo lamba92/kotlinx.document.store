@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     rulesMode = RulesMode.PREFER_SETTINGS
 }
 
-rootProject.name = "kotlinx-document-store"
+rootProject.name = "kotlin-document-store"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
