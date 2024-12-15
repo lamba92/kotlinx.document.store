@@ -2,15 +2,16 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.writeText
 
 plugins {
-    versions
+    `publishing-convention`
     `version-catalog`
-    `maven-publish`
+    versions
 }
 
 val output = layout.buildDirectory.file("libs.versions.toml")
 val replaceVersion by tasks.registering {
     val input = file("libs.versions.toml")
     inputs.file(input)
+    outputs.file(output)
     doLast {
         output.get()
             .asPath
@@ -36,11 +37,26 @@ catalog {
     }
 }
 
+val sourcesJar by tasks.registering(Jar::class) {
+    dependsOn(replaceVersion)
+    archiveClassifier = "sources"
+    from(replaceVersion)
+    destinationDirectory = layout.buildDirectory.dir("artifacts")
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    dependsOn(replaceVersion)
+    archiveClassifier = "javadoc"
+    from(replaceVersion)
+    destinationDirectory = layout.buildDirectory.dir("artifacts")
+}
+
 publishing {
     publications {
         create<MavenPublication>(rootProject.name) {
-            artifactId = "kotlin-document-store-version-catalog"
             from(components["versionCatalog"])
+            artifact(sourcesJar)
+            artifact(javadocJar)
         }
     }
 }

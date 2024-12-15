@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalPathApi::class, ExperimentalKotlinGradlePluginApi::class)
 
 import com.android.build.gradle.tasks.factory.AndroidUnitTest
-import gradle.kotlin.dsl.accessors._f5ffce11a4b5604b3d89b5ef03ba37e3.android
 import kotlin.io.path.ExperimentalPathApi
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree

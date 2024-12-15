@@ -4,12 +4,12 @@ on:
     branches:
       - master
 
-name: Test and lint
+name: Verify
 
 jobs:
   check-android:
     runs-on: ubuntu-latest
-    name: Android tests
+    name: Tests / Android
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -37,7 +37,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    name: Linting check
+    name: Linting
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -53,7 +53,7 @@ jobs:
       matrix:
         os: [ubuntu, windows, macos]
     runs-on: ${{ matrix.os }}-latest
-    name: "Native, JVM, JS tests on ${{ matrix.os }}"
+    name: Tests / ${{ matrix.os == 'ubuntu' && 'Ubuntu' || matrix.os == 'windows' && 'Windows' || matrix.os == 'macos' && 'macOs' }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
@@ -64,3 +64,19 @@ jobs:
     - uses: gradle/actions/setup-gradle@v4
     - name: Run tests
       run: ./gradlew allTests
+
+  publication:
+    strategy:
+      matrix:
+        os: [ ubuntu, windows, macos ]
+    runs-on: ${{ matrix.os }}-latest
+    name: Publishing / ${{ matrix.os == 'ubuntu' && 'Ubuntu' || matrix.os == 'windows' && 'Windows' || matrix.os == 'macos' && 'macOs' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      - uses: actions/setup-java@v4
+        with:
+          distribution: adopt
+          java-version: 21
+      - run: ./gradlew publishAllPublicationsToTestRepository --stacktrace

@@ -4,10 +4,12 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.absolutePathString
+import org.jetbrains.kotlin.gradle.internal.builtins.StandardNames.FqNames.target
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("org.jetbrains.dokka")
     id("versions")
 }
 

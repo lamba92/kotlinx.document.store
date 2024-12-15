@@ -1,18 +1,47 @@
+import gradle.kotlin.dsl.accessors._5110d0ad46c3465a3034c0fe268105a5.kotlin
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
-    id("org.jetbrains.dokka")
     id("org.jlleitschuh.gradle.ktlint")
     `maven-publish`
     signing
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-    dependsOn(tasks.dokkaGeneratePublicationHtml)
-    archiveClassifier = "javadoc"
-    from(tasks.dokkaGeneratePublicationHtml)
-    destinationDirectory = layout.buildDirectory.dir("artifacts")
+val kotlinPlugins = listOf(
+    "org.jetbrains.kotlin.jvm",
+    "org.jetbrains.kotlin.multiplatform"
+)
+
+kotlinPlugins.forEach { kotlinPluginId ->
+    plugins.withId(kotlinPluginId) {
+        plugins.withId("org.jetbrains.dokka") {
+            val javadocJar by tasks.registering(Jar::class) {
+                dependsOn("dokkaGeneratePublicationHtml")
+                archiveClassifier = "javadoc"
+                from("dokkaGeneratePublicationHtml")
+                destinationDirectory = layout.buildDirectory.dir("artifacts")
+            }
+            publishing {
+                publications.withType<MavenPublication> {
+                    artifact(javadocJar)
+                }
+            }
+            if ("jvm" in kotlinPluginId) {
+                val sourcesJar by tasks.registering(Jar::class) {
+                    archiveClassifier = "sources"
+                    from(kotlin.sourceSets.getByName("main").kotlin)
+                    destinationDirectory = layout.buildDirectory.dir("artifacts")
+                }
+                publishing {
+                    publications.withType<MavenPublication> {
+                        artifact(sourcesJar)
+                    }
+                }
+            }
+        }
+    }
 }
 
 publishing {
@@ -22,13 +51,7 @@ publishing {
         }
     }
     publications.withType<MavenPublication> {
-
-        // the publishing plugin is old AF and does not support lazy
-        // properties, so we need to set the artifactId after the
-        // publication is created
-        afterEvaluate { artifactId = "kotlin-document-store-$artifactId" }
-
-        artifact(javadocJar)
+        artifactId = "kotlin-document-store-$artifactId"
         pom {
             name = "kotlin-document-store"
             description = "Kotlin Multiplatform NoSQL document storage"
@@ -66,6 +89,7 @@ signing {
         System.getenv("SIGNING_PASSWORD")
             ?: project.properties["central.signing.privateKeyPassword"] as? String
             ?: return@signing
+    logger.lifecycle("Signing enabled")
     useInMemoryPgpKeys(privateKey, password)
     sign(publishing.publications)
 }
@@ -76,4 +100,28 @@ tasks {
     withType<PublishToMavenRepository> {
         dependsOn(withType<Sign>())
     }
+
+    // in CI we only want to publish the artifacts for the current OS only
+    // but when developing we want to publish all the possible artifacts to test them
+    if (isCi) {
+
+        val linuxNames = listOf("linux", "android", "jvm", "js", "kotlin", "metadata", "wasm")
+        val windowsNames = listOf("mingw", "windows")
+        val appleNames = listOf("macos", "ios", "watchos", "tvos")
+        val currentOs: OperatingSystem = OperatingSystem.current()
+
+        withType<AbstractPublishToMaven> {
+            when {
+                name.containsAny(linuxNames) -> onlyIf { currentOs.isLinux }
+                name.containsAny(windowsNames) -> onlyIf { currentOs.isWindows }
+                name.containsAny(appleNames) -> onlyIf { currentOs.isMacOsX }
+            }
+        }
+    }
 }
+
+val isCi
+    get() = System.getenv("CI") == "true"
+
+fun String.containsAny(strings: List<String>, ignoreCase: Boolean = true): Boolean =
+    strings.any { contains(it, ignoreCase) }
