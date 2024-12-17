@@ -23,23 +23,25 @@ import platform.windows.SHFileOperationW
 actual fun deleteFolderRecursively(path: String) {
     memScoped {
         val attributes = GetFileAttributesW(path)
-        if (attributes == INVALID_FILE_ATTRIBUTES || attributes and FILE_ATTRIBUTE_DIRECTORY.toUInt() == 0u) {
+        if (attributes == INVALID_FILE_ATTRIBUTES) {
+            println("Path does not exist: $path")
             return
         }
+        if (attributes and FILE_ATTRIBUTE_DIRECTORY.toUInt() == 0u) {
+            error("Provided path is not a directory: $path")
+        }
 
-        // Proceed to delete the folder
         val shFileOp = alloc<SHFILEOPSTRUCTW>()
-
         shFileOp.hwnd = null
         shFileOp.wFunc = FO_DELETE.toUInt()
-        shFileOp.pFrom = path.wcstr.ptr
+        shFileOp.pFrom = path.wcstr.getPointer(this) // Ensure null-termination
         shFileOp.pTo = null
         shFileOp.fFlags = (FOF_NOCONFIRMATION or FOF_SILENT or FOF_NOERRORUI).toUShort()
 
         val result = SHFileOperationW(shFileOp.ptr)
         if (result != 0) {
             val errorMessage = strerror(result)?.toKString() ?: "Unknown error"
-            error("Error deleting folder: $errorMessage (code: $result)")
+            error("Error deleting folder: $path\n - $errorMessage (code: $result)")
         }
     }
 }
