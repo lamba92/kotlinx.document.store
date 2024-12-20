@@ -1,8 +1,8 @@
 # kotlin.document.store
 
-Fast NoSql document store for Kotlin Multiplatform projects.
+Fast NoSql document store for Kotlin Multiplatform, inspired by [Nitrite-java](https://github.com/nitrite/nitrite-java) and [MongoDB](https://github.com/mongodb/mongo).
 
-With support for typed and schemaless data, this library enables you to work with JSON objects easily while leveraging `kotlin.serialization` for seamless object serialization/deserialization.
+With support for typed and schemaless data, lets you work with JSON objects easily, leveraging `kotlin.serialization` for fast and simple object serialization/deserialization.
 
 Some key highlights:
 - **Multiplatform**: Works on Kotlin/JVM, Kotlin/JS, and ALL Kotlin/Native platforms (excepts wasm).
@@ -25,8 +25,8 @@ Whether you're building desktop, web, or backend applications, `kotlin.document.
    - [Typed Objects with Serialization](#typed-objects-with-serialization)
    - [Advanced: Indexing and Querying](#advanced-indexing-and-querying)
 4. [Testing](#testing)
-  - [DataStore Test Setup](#datastore-test-setup)
-  - [Available Test Implementations](#available-test-implementations)
+   - [DataStore Test Setup](#datastore-test-setup)
+   - [Available Test Implementations](#available-test-implementations)
 
 # Supported Platforms
 There are three main implementations of the `DataStore` interface:
