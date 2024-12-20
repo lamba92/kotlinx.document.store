@@ -24,14 +24,14 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     ":core",
-    ":tests",
-    ":stores:mvstore",
+    ":samples:js-http-client",
+    ":samples:kmp-app",
+    ":samples:ktor-server",
     ":stores:browser",
     ":stores:leveldb",
+    ":stores:mvstore",
+    ":tests",
     ":version-catalog",
-    ":samples:js-http-client",
-    ":samples:ktor-server",
-    ":samples:kmp-app",
 )
 
 val levelDbPath: Path = file("../kotlin-leveldb").toPath()
