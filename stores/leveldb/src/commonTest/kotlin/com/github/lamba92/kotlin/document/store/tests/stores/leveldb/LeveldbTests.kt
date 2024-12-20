@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 
 class LevelDBDeleteTests : AbstractDeleteTests(LevelDBStoreProvider)
 
@@ -37,7 +38,7 @@ object LevelDBStoreProvider : DataStoreProvider {
 
     override suspend fun deleteDatabase(testName: String) =
         withContext(Dispatchers.IO) {
-            deleteFolderRecursively(getDbPath(testName).toString())
+            getDbPath(testName).deleteRecursively()
         }
 
     override fun provide(testName: String): DataStore =
@@ -50,10 +51,32 @@ object LevelDBStoreProvider : DataStoreProvider {
         )
 }
 
-expect fun Path.resolve(path: String): Path
+fun Path.resolve(vararg other: String): Path = Path(this, *other)
 
-expect fun Path.createDirectories(): Path
-
-expect fun deleteFolderRecursively(path: String)
+fun Path.createDirectories(): Path {
+    SystemFileSystem.createDirectories(this, false)
+    return this
+}
 
 expect val DB_PATH: String
+
+val Path.isFile: Boolean
+    get() = SystemFileSystem.metadataOrNull(this)?.isRegularFile == true
+
+val Path.isDirectory
+    get() = SystemFileSystem.metadataOrNull(this)?.isDirectory == true
+
+fun Path.delete() = SystemFileSystem.delete(this, false)
+
+fun Path.deleteRecursively() {
+    if (isDirectory) {
+        SystemFileSystem.list(this@deleteRecursively)
+            .forEach {
+                when {
+                    it.isFile -> it.delete()
+                    it.isDirectory -> it.deleteRecursively()
+                }
+            }
+    }
+    delete()
+}

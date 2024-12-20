@@ -3,12 +3,11 @@
 plugins {
     `publishing-convention`
     `kotlin-multiplatform-with-android-convention`
-    kotlin("plugin.power-assert")
     id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
-    namespace = "kotlinx.document.store.tests"
+    namespace = "com.github.lamba92.kotlin.document.store.tests"
 }
 
 kotlin {
@@ -73,8 +72,4 @@ kotlin {
             }
         }
     }
-}
-
-powerAssert {
-    functions = setOf("kotlin.test.assertEquals")
 }

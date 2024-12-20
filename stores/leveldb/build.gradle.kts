@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "kotlinx.document.store.tests"
+    namespace = "com.github.lamba92.kotlin.document.store.stores.leveldb"
 }
 
 kotlin {
