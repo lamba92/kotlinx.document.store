@@ -51,7 +51,7 @@ public class JsonCollection internal constructor(
     private val indexMap: IndexOfIndexes,
     private val genIdMap: IdGenerator,
     private val persistentCollection: PersistentCollection,
-) : KotlinxStoreCollection {
+) : KotlinDocumentStoreCollection {
     /**
      * Generates a new unique identifier by incrementing the associated value within [genIdMap].
      *
@@ -600,14 +600,14 @@ private fun <K, V> Iterable<Map.Entry<K, V>>.toMap() = buildMap { this@toMap.for
 /**
  * Extension property to retrieve the `id` field as a nullable [Long] from a [JsonObject].
  *
- * The `id` field is accessed using [KotlinxDocumentStore.ID_PROPERTY_NAME] property name
+ * The `id` field is accessed using [KotlinDocumentStore.ID_PROPERTY_NAME] property name
  * constant and is parsed from its JSON representation. Returns `null` if the field does
  * not.
  *
  * @throws [IllegalArgumentException] if the value of the `id` field is not a valid [Long].
  */
 private val JsonObject.id: Long?
-    get() = get(KotlinxDocumentStore.Companion.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()
+    get() = get(KotlinDocumentStore.ID_PROPERTY_NAME)?.jsonPrimitive?.contentOrNull?.toLong()
 
 /**
  * Creates a copy of the `JsonObject` with the specified ID value.
@@ -615,5 +615,4 @@ private val JsonObject.id: Long?
  * @param id The new ID value to be set in the copied `JsonObject`.
  * @return A new `JsonObject` instance with the updated ID value.
  */
-internal fun JsonObject.copy(id: Long) =
-    JsonObject(toMutableMap().also { it[KotlinxDocumentStore.Companion.ID_PROPERTY_NAME] = JsonPrimitive(id) })
+internal fun JsonObject.copy(id: Long) = JsonObject(toMutableMap().also { it[KotlinDocumentStore.ID_PROPERTY_NAME] = JsonPrimitive(id) })

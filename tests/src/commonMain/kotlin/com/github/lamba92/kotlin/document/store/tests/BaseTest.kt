@@ -3,7 +3,7 @@
 package com.github.lamba92.kotlin.document.store.tests
 
 import com.github.lamba92.kotlin.document.store.core.DataStore
-import com.github.lamba92.kotlin.document.store.core.KotlinxDocumentStore
+import com.github.lamba92.kotlin.document.store.core.KotlinDocumentStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.coroutineScope
@@ -24,7 +24,7 @@ import kotlin.time.Duration.Companion.minutes
  */
 public abstract class BaseTest(private val storeProvider: DataStoreProvider) {
     /**
-     * Runs a database-related coroutine-based test. It wraps [runTest] and provides a [KotlinxDocumentStore]
+     * Runs a database-related coroutine-based test. It wraps [runTest] and provides a [KotlinDocumentStore]
      * instance to the test body. The provided database will be cleaned up before the test starts.
      *
      * @param testName The name of the test database to be created and used during the test.
@@ -35,7 +35,7 @@ public abstract class BaseTest(private val storeProvider: DataStoreProvider) {
      * (default is 1 minute).
      * @param serializersModule The [SerializersModule] to be used by the test database.
      * @param testBody A suspendable function that acts as the test body.
-     * It receives a [KotlinxDocumentStore] instance representing the test database.
+     * It receives a [KotlinDocumentStore] instance representing the test database.
      * @return A [TestResult] representing the result of the test execution.
      */
     protected fun runDatabaseTest(
@@ -43,13 +43,13 @@ public abstract class BaseTest(private val storeProvider: DataStoreProvider) {
         context: CoroutineContext = EmptyCoroutineContext,
         timeout: Duration = 1.minutes,
         serializersModule: SerializersModule? = null,
-        testBody: suspend CoroutineScope.(db: KotlinxDocumentStore) -> Unit,
+        testBody: suspend CoroutineScope.(db: KotlinDocumentStore) -> Unit,
     ): TestResult =
         runTest(context, timeout) {
             storeProvider.deleteDatabase(testName)
             val store = storeProvider.provide(testName)
             val db =
-                KotlinxDocumentStore {
+                KotlinDocumentStore {
                     this.store = store
                     this.serializersModule = serializersModule
                 }

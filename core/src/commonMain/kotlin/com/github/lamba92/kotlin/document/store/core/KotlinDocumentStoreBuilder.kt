@@ -5,10 +5,16 @@ package com.github.lamba92.kotlin.document.store.core
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 
+@Deprecated("Old name, use new one", ReplaceWith("KotlinDocumentDatabaseBuilder"))
+public typealias KotlinxDocumentDatabaseBuilder = KotlinDocumentDatabaseBuilder
+
+@Deprecated("Old name, use new one", ReplaceWith("KotlinDocumentStore"))
+public typealias KotlinxDocumentStore = KotlinDocumentStore
+
 /**
  * Builder class for constructing instances of `KotlinxDocumentStore`.
  */
-public class KotlinxDocumentDatabaseBuilder {
+public class KotlinDocumentDatabaseBuilder {
     /**
      * Optional custom serializers module for JSON operations.
      */
@@ -22,12 +28,12 @@ public class KotlinxDocumentDatabaseBuilder {
     /**
      * Builds and returns a `KotlinxDocumentStore` instance using the defined configurations.
      */
-    public fun build(): KotlinxDocumentStore =
-        KotlinxDocumentStore(
+    public fun build(): KotlinDocumentStore =
+        KotlinDocumentStore(
             store = store ?: error("Store must be provided"),
             json =
                 Json {
-                    this@KotlinxDocumentDatabaseBuilder.serializersModule?.let { serializersModule = it }
+                    this@KotlinDocumentDatabaseBuilder.serializersModule?.let { serializersModule = it }
                     ignoreUnknownKeys = true
                     encodeDefaults = true
                 },
@@ -35,8 +41,8 @@ public class KotlinxDocumentDatabaseBuilder {
 }
 
 @Suppress("FunctionName")
-public inline fun KotlinxDocumentStore(block: KotlinxDocumentDatabaseBuilder.() -> Unit): KotlinxDocumentStore =
-    KotlinxDocumentDatabaseBuilder().apply(block).build()
+public inline fun KotlinDocumentStore(block: KotlinDocumentDatabaseBuilder.() -> Unit): KotlinDocumentStore =
+    KotlinDocumentDatabaseBuilder().apply(block).build()
 
 @Suppress("FunctionName")
-public fun KotlinxDocumentStore(store: DataStore): KotlinxDocumentStore = KotlinxDocumentStore { this.store = store }
+public fun KotlinDocumentStore(store: DataStore): KotlinDocumentStore = KotlinDocumentStore { this.store = store }

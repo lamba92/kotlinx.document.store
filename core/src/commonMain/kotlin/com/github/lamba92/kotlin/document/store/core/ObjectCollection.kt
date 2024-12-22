@@ -24,7 +24,7 @@ import kotlinx.serialization.serializer
 public class ObjectCollection<T : Any>(
     private val serializer: KSerializer<T>,
     public val jsonCollection: JsonCollection,
-) : KotlinxStoreCollection by jsonCollection {
+) : KotlinDocumentStoreCollection by jsonCollection {
     /**
      * Searches for objects in the collection that match the specified selector and value.
      * If an index exists for the provided selector, it uses the index for optimized lookup.

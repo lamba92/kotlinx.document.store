@@ -2,7 +2,7 @@
 
 package com.github.lamba92.kotlin.document.store.tests
 
-import com.github.lamba92.kotlin.document.store.core.KotlinxDocumentStore
+import com.github.lamba92.kotlin.document.store.core.KotlinDocumentStore
 import com.github.lamba92.kotlin.document.store.core.find
 import com.github.lamba92.kotlin.document.store.core.getObjectCollection
 import kotlinx.coroutines.flow.first
@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
  * Abstract base class for testing find functionality within a document store.
  *
  * It extends [BaseTest] and provides a set of tests that validate the behavior of various
- * find operations performed on collections and documents within a [KotlinxDocumentStore].
+ * find operations performed on collections and documents within a [KotlinDocumentStore].
  * The tests include functionality for finding documents using both simple and complex indexes
  * to ensure precise data retrieval in diverse use cases.
  *

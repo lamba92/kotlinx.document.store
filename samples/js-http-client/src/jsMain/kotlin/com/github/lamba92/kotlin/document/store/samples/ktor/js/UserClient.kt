@@ -1,8 +1,9 @@
 @file:OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
+@file:Suppress("unused")
 
 package com.github.lamba92.kotlin.document.store.samples.ktor.js
 
-import com.github.lamba92.kotlin.document.store.core.KotlinxDocumentStore
+import com.github.lamba92.kotlin.document.store.core.KotlinDocumentStore
 import com.github.lamba92.kotlin.document.store.samples.User
 import com.github.lamba92.kotlin.document.store.stores.browser.BrowserStore
 import io.ktor.client.HttpClient
@@ -53,7 +54,7 @@ class UserClient(
             }
         }
 
-    private val cache = KotlinxDocumentStore(BrowserStore)
+    private val cache = KotlinDocumentStore(BrowserStore)
 
     @Serializable
     data class GetAllUsersRequest(val page: Int, val pageSize: Int)

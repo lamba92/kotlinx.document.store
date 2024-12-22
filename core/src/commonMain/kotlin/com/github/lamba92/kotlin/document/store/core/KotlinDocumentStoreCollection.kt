@@ -5,13 +5,16 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.serializer
 
+@Deprecated("Old name, use new one", ReplaceWith("KotlinDocumentStoreCollection"))
+public typealias KotlinxDocumentStoreCollection = KotlinDocumentStoreCollection
+
 /**
  * A collection of elements saved in a [DataStore]. This interface provides
  * various operations to manage the lifecycle and contents of a collection, such as
  * creating and dropping indexes, fetching collection details, and performing basic
  * CRUD operations.
  */
-public interface KotlinxStoreCollection {
+public interface KotlinDocumentStoreCollection {
     /**
      * Retrieves the total number of elements in the collection.
      *
@@ -127,7 +130,7 @@ public interface KotlinxStoreCollection {
  * @param fieldValue An object used as the filter to identify which elements to remove.
  * @return `true` if any elements were removed, `false` otherwise.
  */
-public suspend inline fun <reified K> KotlinxStoreCollection.removeWhere(
+public suspend inline fun <reified K> KotlinDocumentStoreCollection.removeWhere(
     fieldSelector: String,
     fieldValue: K,
     fieldSerializer: KSerializer<K>,
@@ -146,7 +149,7 @@ public suspend inline fun <reified K> KotlinxStoreCollection.removeWhere(
  * @param fieldValue An object used as the filter to identify which elements to remove.
  * @return `true` if any elements were removed, `false` otherwise.
  */
-public suspend inline fun <reified K> KotlinxStoreCollection.removeWhere(
+public suspend inline fun <reified K> KotlinDocumentStoreCollection.removeWhere(
     fieldSelector: String,
     fieldValue: K,
 ): Boolean =
