@@ -25,7 +25,7 @@ import kotlin.jvm.JvmName
  * @param store The underlying persistent data store for managing collection data.
  * @param json A `Json` instance used for serialization and deserialization of documents.
  */
-public class KotlinxDocumentStore internal constructor(
+public class KotlinDocumentStore internal constructor(
     public val store: DataStore,
     public val json: Json,
 ) : SuspendCloseable by store {
@@ -158,7 +158,7 @@ internal suspend fun <K, V> Flow<Map.Entry<K, V>>.toMap() =
  * @param name The name of the collection to retrieve.
  * @return An [ObjectCollection] of the specified type [T].
  */
-public suspend inline fun <reified T : Any> KotlinxDocumentStore.getObjectCollection(name: String): ObjectCollection<T> =
+public suspend inline fun <reified T : Any> KotlinDocumentStore.getObjectCollection(name: String): ObjectCollection<T> =
     getJsonCollection(name).toObjectCollection<T>()
 
 /**

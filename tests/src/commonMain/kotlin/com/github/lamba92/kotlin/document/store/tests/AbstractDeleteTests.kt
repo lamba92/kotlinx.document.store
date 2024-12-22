@@ -2,7 +2,7 @@
 
 package com.github.lamba92.kotlin.document.store.tests
 
-import com.github.lamba92.kotlin.document.store.core.KotlinxDocumentStore
+import com.github.lamba92.kotlin.document.store.core.KotlinDocumentStore
 import com.github.lamba92.kotlin.document.store.core.getObjectCollection
 import com.github.lamba92.kotlin.document.store.core.removeWhere
 import kotlinx.coroutines.flow.count
@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
  * Abstract base class for testing deletion functionality within a document store.
  *
  * It extends [BaseTest] to provide a set of tests that validate the behavior of various
- * deletion operations performed on collections and documents within a [KotlinxDocumentStore].
+ * deletion operations performed on collections and documents within a [KotlinDocumentStore].
  * The tests include functionality for clearing collections, validating deletions for non-existent
  * collections, handling indexed and non-indexed documents, as well as testing complex selectors.
  *
