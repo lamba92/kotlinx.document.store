@@ -4,7 +4,7 @@ Fast NoSql document store for Kotlin Multiplatform, inspired by [Nitrite-java](h
 
 With support for typed and schemaless data, lets you work with JSON objects easily, leveraging `kotlin.serialization` for fast and simple object serialization/deserialization.
 
-Originaly created for [JetBrains/package-search-intellij-plugin](https://github.com/JetBrains/package-search-intellij-plugin) for a fast and reliable offline cache, evlved for all KMP developers 🚀
+Originaly created for [JetBrains/package-search-intellij-plugin](https://github.com/JetBrains/package-search-intellij-plugin) for a fast and reliable offline cache, evolved for all KMP developers 🚀
 
 Some key highlights:
 - **Multiplatform**: Works on Kotlin/JVM, Kotlin/JS, and ALL Kotlin/Native platforms (excepts wasm).
