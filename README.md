@@ -19,21 +19,30 @@ Whether you're building desktop, web, or backend applications, `kotlin.document.
 1. [Overview](#kotlindocumentstore)
 2. [Supported Platforms](#supported-platforms)
 3. [Quickstart](#quickstart)
-   - [Dependency Setup](#dependency-setup)
-     - [Gradle Setup](#gradle-setup)
-     - [Version Catalog Setup](#using-version-catalog)
-   - [Initialize a Persistent DataStore](#initialize-a-persistent-datastore)
-   - [Create and Use Collections](#create-and-use-collections)
-   - [Typed Objects with Serialization](#typed-objects-with-serialization)
-   - [Advanced: Indexing and Querying](#advanced-indexing-and-querying)
-4. [Testing](#testing)
-   - [DataStore Test Setup](#datastore-test-setup)
-   - [Available Test Implementations](#available-test-implementations)
+    - [Android and JVM](#android-and-jvm)
+        - [Dependency Setup](#dependency-setup)
+            - [Gradle Setup](#gradle-setup)
+            - [Using Version Catalog](#using-version-catalog)
+            - [In your Activity](#in-your-android-activity)
+            - [For JVM](#for-jvm)
+    - [JS Browser](#js-browser)
+        - [Dependency Setup](#dependency-setup-1)
+            - [Gradle Setup](#gradle-setup-1)
+            - [Using Version Catalog](#using-version-catalog-1)
+            - [Anywhere in your code](#anywhere-in-your-code)
+    - [Typed collections](#typed-collections)
+    - [JSON collections](#json-collections)
+4. [Advanced usage](#advanced-usage)
+    - [Indexes](#indexes)
+        - [Index Selector](#index-selector)
+        - [Array Indexing](#array-indexing)
+    - [ID Field](#id-field)
+5. [Testing](#testing)
+    - [DataStore Test Setup](#datastore-test-setup)
+    - [Available Test Implementations](#available-test-implementations)
 
 # Supported Platforms
 There are three main implementations of the `DataStore` interface:
-- **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore.
-  - JVM
 - **LevelDB**: For all Kotlin platforms (excluding JS and Wasm), using [kotlin-leveldb](https://github.com/lamba92/kotlin-leveldb) key-value store.
   - JVM:
     - Windows: arm64, x64
@@ -43,6 +52,8 @@ There are three main implementations of the `DataStore` interface:
   - Native (Linux, macOS, Windows, iOS, Android, Android native, watchOS, tvOS)
 - **Browser**: For browser-based applications, using the browser's [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) storage.
   - JS
+- **MVStore**: For JVM-based applications, using the [H2 Database Engine](https://www.h2database.com/html/main.html) MVStore. Recommended only for IntelliJ Plugin development.
+  - JVM
 
 google/leveldb is licensed under [BSD-3-Clause license](https://github.com/google/leveldb/blob/main/LICENSE), all rights reserved to the original authors.
 
@@ -50,46 +61,25 @@ The modules `core` and `test` are common to all platforms and contain the main i
 
 # Quickstart
 
-## Dependency Setup
+## Android and JVM
+
+### Dependency Setup
 Import the library to your project, see the latest version in the [Releases](https://github.com/lamba92/kotlin.document.store/releases) page:
 
-### Gradle Setup
+#### Gradle Setup
 ```kotlin
-// build.gradle.kts
-
-// Kotlin/JVM
 dependencies {
-    implementation("com.github.lamba92:kotlin-document-store-mvstore:{latest_version}")
     implementation("com.github.lamba92:kotlin-document-store-leveldb:{latest_version}")
 }
-
-// Kotlin/JS
-kotlin {
-    sourceSets {
-        jsMain {
-            dependencies {
-                implementation("com.github.lamba92:kotlin-document-store-browser:{latest_version}")
-            }
-        }
-    }
-}
-
-// Kotlin/Multiplatform (excluding wasm and js)
-kotlin {
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation("com.github.lamba92:kotlin-document-store-leveldb:{latest_version}")
-            }
-        }
-    }
-}
 ```
-### Using Version Catalog
+#### Using Version Catalog
 Alternatively with the provided version catalog:
 ```kotlin
 // settings.gradle.kts
 dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
     versionCatalogs {
         create("kotlinDocumentStore") {
             from("com.github.lamba92:kotlin-document-store-version-catalog:{latest_version}")
@@ -97,108 +87,77 @@ dependencyResolutionManagement {
     }
 }
 
-// Kotlin/JVM
+// build.gradle.kts
 dependencies {
-  implementation(kotlinDocumentStore.mvstore)
-  // or
   implementation(kotlinDocumentStore.leveldb)
 }
+```
 
-// Kotlin/JS
-kotlin {
-  sourceSets {
-    jsMain {
-      dependencies {
-        implementation(kotlinDocumentStore.browser)
-      }
-    }
-  }
-}
+#### In your Android Activity
 
-// Kotlin/Multiplatform (excluding wasm and js)
-kotlin {
-  sourceSets {
-    commonMain {
-      dependencies {
-        implementation(kotlinDocumentStore.leveldb)
-      }
+```kotlin
+class MyActivity : CompactActivity() {
+    
+    override fun onCreate(): String {
+        val store = context.getLevelDBStore()
+        val db = KotlinDocumentStore(store)
+        // your stuff...
     }
-  }
+    
 }
 ```
 
-To get started using `kotlin.document.store`, follow this guide:
-
----
-
-### Initialize a Persistent DataStore
-
-The library provides platform-specific implementations for persistent data stores. Initialize one depending on your target platform:
-
-- **JVM using MVStore**:
+#### For JVM
 
 ```kotlin
 fun main() {
-    val store = MVDataStore.open("data.mv.db")
-    println("Persistent MVStore Database Initialized!")
-    store.close() // Clean up when done
+    val store = LevelDBStore.open("path/to/db")
+    val db = KotlinDocumentStore(store)
+    // your stuff...
 }
 ```
 
-- **All Kotlin platforms using LevelDB**:
+## JS Browser
 
+### Dependency Setup
+Import the library to your project, see the latest version in the [Releases](https://github.com/lamba92/kotlin.document.store/releases) page:
+
+#### Gradle Setup
 ```kotlin
-fun main() {
-    val store = LevelDBStore.open("a/folder/leveldb")
-    println("Persistent LevelDB Database Initialized!")
-    store.close() // Clean up when done
+dependencies {
+    implementation("com.github.lamba92:kotlin-document-store-browser:{latest_version}")
 }
 ```
-
-- **Browser with IndexedDB**:
-
+#### Using Version Catalog
+Alternatively with the provided version catalog:
 ```kotlin
-suspend fun main() {
-    val store = BrowserStore
-    println("Browser IndexedDB Initialized!")
-    // No explicit close needed in the browser environment
-}
-```
-
----
-
-### Create and Use Collections
-
-Once the `DataStore` has been initialized, retrieve and manipulate JSON-based collections:
-
-```kotlin
-suspend fun main() {
-    // Initialize the datastore (using MVStore as an example)
-    val mvStore = MVDataStore.open("data.mv.db")
-    val documentStore = kotlinDocumentStore(mvStore)
-
-    // Create or fetch a collection
-    val collection = documentStore.getJsonCollection("users")
-
-    // Insert a document
-    val json = buildJsonObject {
-        put("name", "Jane Doe")
-        put("age", 25)
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
     }
-    collection.insert(json)
-
-    // Retrieve the inserted document
-    val allUsers = collection.iterateAll().toList()
-    println("Users: $allUsers")
-
-    // Clean up
-    documentStore.close()
+    versionCatalogs {
+        create("kotlinDocumentStore") {
+            from("com.github.lamba92:kotlin-document-store-version-catalog:{latest_version}")
+        }
+    }
 }
+
+// build.gradle.kts
+dependencies {
+  implementation(kotlinDocumentStore.browser)
+}
+```
+
+#### Anywhere in your code
+
+```kotlin
+val db = KotlinDocumentStore(BrowserStore)
 ```
 
 ---
 
-### Typed Objects with Serialization
+### Typed collections
 
 Use `ObjectCollection` to store and manipulate strongly typed objects:
 
@@ -212,64 +171,167 @@ data class User(
     val age: Int
 )
 
-suspend fun main() {
-    // Initialize the datastore and Json serializer
-    val mvStore = MVDataStore.open("data.mv.db")
-    val documentStore = kotlinDocumentStore(mvStore)
+// ...
 
-    // Retrieve a typed collection
-    val userCollection = documentStore.getObjectCollection<User>("users")
+val documentStore = KotlinDocumentStore(aDataStore)
 
-    // Insert a user
-    val user = userCollection.insert(User(name = "John Smith", age = 30))
-    println("Inserted User: $user")
+// Retrieve a typed collection
+val userCollection = documentStore.getObjectCollection<User>("users")
 
-    val id = requireNotNull(user.id) { "IMPOSSIBAH!" }
-    println("User ID: $id")
-    
-    // Query by name
-    val queriedUser = userCollection.find("name", "John Smith").firstOrNull()
-    println("Queried User: $queriedUser")
+// Insert a user
+val user = userCollection.insert(User(name = "John Smith", age = 30))
+println("Inserted User: $user") // will also print the generated id
 
-    // Close the store
-    documentStore.close()
-}
+val id = requireNotNull(user.id) { "IMPOSSIBAH!" }
+println("User ID: $id")
+
+// Query by name
+val queriedUser = userCollection.find("name", "John Smith").firstOrNull()
+println("Queried User: $queriedUser")
+
+// Close the store
+documentStore.close()
 ```
 
 ---
 
-### Advanced: Indexing and Querying
+### JSON collections
 
-Speed up queries by using indexes:
+Use `JsonCollection` to store and manipulate raw JSON objects:
 
 ```kotlin
-suspend fun main() {
-    val mvStore = MVDataStore.open("data.mv.db")
-    val documentStore = kotlinDocumentStore(mvStore)
+val documentStore = KotlinDocumentStore(aDataStore)
 
-    val collection = documentStore.getJsonCollection("users")
+// Create or fetch a collection
+val collection = documentStore.getJsonCollection("users")
 
-    // Create an index
-    collection.createIndex("name")
-
-    // Insert documents
-    val json1 = buildJsonObject {
-        put("name", "Alice")
-        put("age", 28)
-    }
-    val json2 = buildJsonObject {
-        put("name", "Bob")
-        put("age", 34)
-    }
-    collection.insert(json1)
-    collection.insert(json2)
-
-    // Use the index to query
-    val results = collection.find("name", "Alice").toList()
-
-    println("Search Results: $results")
-    documentStore.close()
+// Insert a document
+val json = buildJsonObject { // kotlinx.serialization json APIs
+    put("name", "Jane Doe")
+    put("age", 25)
 }
+collection.insert(json)
+
+// Retrieve the inserted document
+val allUsers = collection.iterateAll().toList()
+println("Users: $allUsers")
+
+// Clean up
+documentStore.close()
+```
+---
+
+# Advanced usage
+
+## Indexes
+
+Any collection, JSON or typed, can have indexes created on them for faster querying:
+
+```kotlin
+val documentStore = kotlinDocumentStore(aDataStore)
+
+val collection = documentStore.getJsonCollection("users")
+
+// Create an index
+collection.createIndex("name")
+
+// Insert documents
+val json1 = buildJsonObject {
+    put("name", "Alice")
+    put("age", 28)
+}
+val json2 = buildJsonObject {
+    put("name", "Bob")
+    put("age", 34)
+}
+collection.insert(json1)
+collection.insert(json2)
+
+// Use the index to query
+val results = collection.find("name", "Alice").toList()
+
+println("Search Results: $results")
+```
+
+In the example above, we create an index on the `name` field of the `users` collection. We then insert two documents into the collection and query for documents where the `name` field is `Alice`. The query uses the index to find the documents faster.
+
+### Index Selector
+
+Indexes can be created using JSON selectors to index nested fields. For example, consider the following JSON document:
+
+```json
+{
+  "name": "Alice",
+  "address": {
+    "city": "New York",
+    "zip": 10001
+  }
+}
+```
+
+To create an index on the `city` field in the `address` object, we can use a JSON selector:
+
+```kotlin
+val documentStore = kotlinDocumentStore(aDataStore)
+val collection = documentStore.getJsonCollection("users")
+collection.createIndex("address.city")
+```
+
+Now, an index is created on the `city` field in the `address` object. We can query for documents where the `city` field is, for example, `New York`:
+
+```kotlin
+val results = collection.find("address.city", "New York").toList()
+```
+
+##### Array Indexing
+
+Indexes can also be created on array fields. For example, consider the following JSON document:
+
+```json
+{
+  "name": "Alice",
+  "tags": ["tag1", "tag2", "tag3"]
+}
+```
+
+To create an index on the `tags` array field, we can use a JSON selector:
+
+```kotlin
+val documentStore = kotlinDocumentStore(aDataStore)
+val collection = documentStore.getJsonCollection("users")
+collection.createIndex("tags.$3")
+```
+
+Now, an index is created on the third element of the `tags` array field. We can query for documents where the third element of the `tags` array is, for example, `tag3`:
+
+```kotlin
+val results = collection.find("tags.$3", "tag3").toList()
+```
+
+## ID field
+
+The ID field name is `_id` and cannot be changed in the representation inside the database. The ID has to be of type `Long` and is autogenerated if not provided when inserting a document.
+
+When using typed collections, the ID field is optional in the data class, but it has to be of type `Long?` and nullable. Dor example:
+
+```kotlin
+@Serializable
+data class User(
+    val _id: Long? = null,
+    val name: String,
+    val age: Int
+)
+```
+
+It is possible to change the name of the ID field in the data class using the `@SerialName` annotation, but the actual field name in the database will always be `_id`:
+    
+```kotlin
+@Serializable
+data class User(
+    @SerialName("_id") val id: Long? = null,
+    val name: String,
+    val age: Int
+)
 ```
 
 # Testing

@@ -7,7 +7,7 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.createDirectories
 
 /**
- * Opens a new [kotlinx.document.store.stores.leveldb.LevelDBStore] instance at the specified path with the given options.
+ * Opens a new [LevelDBStore] instance at the specified path with the given options.
  *
  * Intermediate directories are created if they do not exist. The database will be created
  * at the specified path as a directory.

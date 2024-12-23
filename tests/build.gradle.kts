@@ -45,6 +45,10 @@ kotlin {
     wasmWasi {
         nodejs()
     }
+    wasmJs {
+        browser()
+        nodejs()
+    }
 
     sourceSets {
 
