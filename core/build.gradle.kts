@@ -46,6 +46,10 @@ kotlin {
     wasmWasi {
         nodejs()
     }
+    wasmJs {
+        browser()
+        nodejs()
+    }
 
     applyDefaultHierarchyTemplate()
 
